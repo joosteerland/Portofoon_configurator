@@ -79,6 +79,7 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(alarm, /image="\.\/smartphone\.png"/);
   assert.match(alarm, /image="\.\/twig-embody\.jpg"/);
   assert.match(alarm, /image="\.\/swissphone-c35\.png"/);
+  assert.match(alarm, /receiver-icon-device/);
   assert.match(alarm, /multiladeropstelling/);
   assert.match(alarm, /Firecom Protect/);
   assert.match(alarm, /Hybride alarmering/);
