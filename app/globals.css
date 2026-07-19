@@ -39,7 +39,7 @@ main { overflow:hidden; }
 .choice-grid.two { grid-template-columns:repeat(2,1fr); }
 .choice-card { position:relative; min-height:86px; padding:15px 13px; text-align:left; border:1px solid #d6e1ec; border-radius:12px; color:var(--ink); background:#fff; cursor:pointer; transition:border-color .18s,box-shadow .18s,transform .18s; }
 .choice-card:hover:not(:disabled) { border-color:#e0b600; transform:translateY(-1px); }
-.choice-card:focus-visible,.quantity-control button:focus-visible,.toggle-chip:focus-visible,select:focus-visible,summary:focus-visible { outline:3px solid rgba(255,212,59,.68); outline-offset:2px; }
+.choice-card:focus-visible,.quantity-control button:focus-visible,.toggle-chip:focus-visible,select:focus-visible,summary:focus-visible,input:focus-visible,.quote-form button:focus-visible { outline:3px solid rgba(255,212,59,.68); outline-offset:2px; }
 .choice-card.active { border-color:var(--blue); background:#fff9df; box-shadow:0 0 0 1px var(--blue); }
 .choice-card:disabled { opacity:.46; cursor:not-allowed; background:#f4f6f8; }
 .choice-card b,.choice-card small { display:block; padding-right:18px; }
@@ -126,6 +126,10 @@ select { width:100%; margin-top:6px; padding:10px 28px 10px 10px; border:1px sol
 .fineprint { margin:12px 0 0; color:#84a5c1; font-size:7.7px; line-height:1.45; }
 .floating-price { position:fixed; z-index:50; right:22px; bottom:18px; width:350px; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:13px 16px; color:#fff; border:1px solid rgba(255,255,255,.2); border-top:4px solid var(--yellow); border-radius:14px; background:rgba(5,45,84,.96); box-shadow:0 15px 40px rgba(0,25,50,.3); backdrop-filter:blur(12px); pointer-events:none; }
 .floating-price div { display:flex; flex-direction:column; }.floating-price small { color:#bed3e5; font-size:8px; text-transform:uppercase; letter-spacing:.08em; }.floating-price b { margin-top:2px; color:var(--yellow); font-size:22px; letter-spacing:-.03em; }.floating-price>span { max-width:140px; color:#fff; font-size:9px; font-weight:750; text-align:right; line-height:1.35; }
+.quote-request { width:min(1180px,calc(100% - 36px)); margin:0 auto 95px; display:grid; grid-template-columns:1fr .88fr; gap:58px; align-items:center; padding:54px; border-radius:24px; color:#fff; background:linear-gradient(135deg,var(--blue-dark),var(--blue)); box-shadow:0 22px 65px rgba(8,47,87,.18); }
+.quote-intro .step-kicker { color:var(--yellow); }.quote-intro h2 { max-width:580px; margin:10px 0 16px; font-size:clamp(31px,4vw,49px); line-height:1.03; letter-spacing:-.045em; }.quote-intro>p { max-width:600px; margin:0; color:#c6d9e9; font-size:13px; line-height:1.65; }
+.quote-summary { display:grid; gap:8px; margin-top:25px; }.quote-summary span { display:flex; justify-content:space-between; gap:20px; padding:10px 0; border-bottom:1px solid rgba(255,255,255,.12); }.quote-summary small { color:#a9c5dd; font-size:9px; text-transform:uppercase; letter-spacing:.07em; }.quote-summary b { color:#fff; font-size:11px; text-align:right; }
+.quote-form { position:relative; display:grid; gap:13px; padding:27px; color:var(--ink); border-top:5px solid var(--yellow); border-radius:16px; background:#fff; box-shadow:0 16px 44px rgba(0,26,52,.24); }.quote-form label { display:grid; gap:6px; color:#34516d; font-size:10px; font-weight:800; }.quote-form input { width:100%; min-height:45px; padding:10px 12px; color:var(--ink); border:1px solid #c9d8e5; border-radius:9px; background:#fff; }.quote-form button { min-height:48px; margin-top:2px; border:0; border-radius:10px; color:var(--ink); background:var(--yellow); font-size:12px; font-weight:850; cursor:pointer; }.quote-form button:hover:not(:disabled) { background:#ffdf68; transform:translateY(-1px); }.quote-form button:disabled { opacity:.7; cursor:default; }.privacy-note { margin:0; color:#75889a; font-size:8.5px; line-height:1.45; }.website-field { position:absolute!important; left:-10000px!important; width:1px!important; height:1px!important; overflow:hidden!important; }.form-status { padding:10px 12px; border-radius:9px; font-size:10px; line-height:1.45; }.form-status.sent { color:#17552e; background:#e8f7ed; }.form-status.error { color:#7a250f; background:#fff0eb; }
 .comparison { padding:80px max(24px,calc((100vw - 1240px)/2)) 95px; background:#fff; }
 .section-heading h2 { max-width:760px; margin:8px 0 30px; font-size:clamp(30px,4vw,46px); line-height:1.08; letter-spacing:-.045em; }
 .comparison-grid { display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); border-radius:18px; overflow:hidden; }
@@ -138,6 +142,7 @@ footer>span { color:#fff; font-weight:850; letter-spacing:.08em; }
   .configurator-shell { grid-template-columns:1fr; max-width:760px; overflow:hidden; }
   .result-panel { position:relative; top:auto; min-height:auto; border-radius:0; }
   .choice-grid { grid-template-columns:1fr; }.choice-grid.two { grid-template-columns:1fr 1fr; }.choice-card { min-height:70px; }
+  .quote-request { grid-template-columns:1fr; gap:30px; max-width:760px; }
   .comparison-grid { grid-template-columns:1fr 1fr; }.comparison-grid article:nth-child(2) { border-right:0; }.comparison-grid article:nth-child(-n+2) { border-bottom:1px solid var(--line); }
 }
 @media (max-width:680px) {
@@ -150,6 +155,7 @@ footer>span { color:#fff; font-weight:850; letter-spacing:.08em; }
   .quantity-row { grid-template-columns:1fr; }.quantity-control { width:100%; }.model-visual { transform:scale(.82); transform-origin:top right; right:12px; }
   .result-panel h2 { max-width:220px; font-size:27px; }.comparison { padding-top:60px; padding-bottom:65px; }.comparison-grid { grid-template-columns:1fr; }.comparison-grid article { border-right:0; border-bottom:1px solid var(--line); }.comparison-grid article:nth-child(2) { border-right:0; }.comparison-grid article:last-child { border-bottom:0; }
   .floating-price { left:10px; right:10px; bottom:8px; width:auto; padding:10px 13px; border-radius:12px; }.floating-price b { font-size:19px; }
+  .quote-request { width:calc(100% - 20px); margin-bottom:65px; padding:30px 18px; border-radius:18px; }.quote-form { padding:20px 16px; }
   footer { align-items:flex-start; flex-direction:column; }
 }
 @media (prefers-reduced-motion:reduce) { * { scroll-behavior:auto!important; transition:none!important; } }

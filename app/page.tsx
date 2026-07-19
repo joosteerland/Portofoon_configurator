@@ -146,6 +146,12 @@ export default function Home() {
   const [repeaterMount, setRepeaterMount] = useState("wand");
   const [backupPower, setBackupPower] = useState("ja");
   const [siteConnect, setSiteConnect] = useState("nee");
+  const [companyName, setCompanyName] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState("");
+  const [quoteState, setQuoteState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [quoteMessage, setQuoteMessage] = useState("");
 
   const recommendation = useMemo(() => {
     let key: ModelKey;
@@ -180,6 +186,61 @@ export default function Home() {
 
   const toggleExtension = (value: string) => {
     setExtensions((current) => current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
+  };
+
+  const requestQuote = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setQuoteState("sending");
+    setQuoteMessage("");
+
+    try {
+      const response = await fetch("/api/quote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyName,
+          contactName,
+          email,
+          website,
+          configuration: {
+            model: recommendation.product.name,
+            variant: recommendation.product.variant,
+            sku: recommendation.product.sku,
+            quantity,
+            unitPrice: recommendation.product.price,
+            radioSubtotal: recommendation.subtotal,
+            systemTotal,
+            atex,
+            atexHazard,
+            atexZone,
+            atexGroup,
+            temperatureClass,
+            display,
+            environment,
+            channels,
+            safety,
+            noise,
+            band,
+            permit,
+            charger,
+            battery,
+            extensions,
+            repeater,
+            repeaterMount,
+            backupPower,
+            siteConnect,
+            quoteItems,
+          },
+        }),
+      });
+      const result = await response.json() as { message?: string };
+      if (!response.ok) throw new Error(result.message || "De aanvraag kon niet worden verzonden.");
+      setQuoteState("sent");
+      setQuoteMessage(result.message || "Je aanvraag is ontvangen.");
+    } catch (error) {
+      setQuoteState("error");
+      setQuoteMessage(error instanceof Error ? error.message : "De aanvraag kon niet worden verzonden.");
+    }
   };
 
   return (
@@ -371,6 +432,28 @@ export default function Home() {
         <div><small>Live totaal excl. btw</small><b>{euro.format(systemTotal)}</b></div>
         <span>{recommendation.product.name}{repeater ? " + SLR5500" : ""}</span>
       </div>
+
+      <section className="quote-request" aria-labelledby="quote-title">
+        <div className="quote-intro">
+          <span className="step-kicker">Persoonlijke offerte</span>
+          <h2 id="quote-title">Laat Firecom je configuratie controleren.</h2>
+          <p>Stuur je keuzes naar het salesteam. Een specialist controleert de uitvoering, beschikbaarheid en eventuele vergunningen en neemt contact met je op voor een echte offerte.</p>
+          <div className="quote-summary">
+            <span><small>Geselecteerd</small><b>{quantity} × {recommendation.product.name}</b></span>
+            <span><small>Indicatief totaal</small><b>{euro.format(systemTotal)} excl. btw</b></span>
+            {repeater && <span><small>Bereikuitbreiding</small><b>SLR5500-pakket inbegrepen</b></span>}
+          </div>
+        </div>
+        <form className="quote-form" onSubmit={requestQuote}>
+          <label>Bedrijfsnaam<input name="companyName" value={companyName} onChange={(event) => setCompanyName(event.target.value)} autoComplete="organization" required maxLength={120} /></label>
+          <label>Naam<input name="contactName" value={contactName} onChange={(event) => setContactName(event.target.value)} autoComplete="name" required maxLength={120} /></label>
+          <label>E-mailadres<input name="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" required maxLength={254} /></label>
+          <label className="website-field" aria-hidden="true">Website<input name="website" value={website} onChange={(event) => setWebsite(event.target.value)} tabIndex={-1} autoComplete="off" /></label>
+          <button type="submit" disabled={quoteState === "sending" || quoteState === "sent"}>{quoteState === "sending" ? "Aanvraag verzenden…" : quoteState === "sent" ? "Aanvraag verzonden" : "Vraag mijn offerte aan"}</button>
+          <p className="privacy-note">Door te verzenden geef je Firecom toestemming om contact op te nemen over deze configuratie.</p>
+          {quoteState !== "idle" && quoteState !== "sending" && <div className={`form-status ${quoteState}`} role="status">{quoteMessage}</div>}
+        </form>
+      </section>
 
       <section className="comparison" aria-labelledby="compare-title">
         <div className="section-heading"><span className="step-kicker">Modeloverzicht</span><h2 id="compare-title">Van praktische werkportofoon tot ATEX-topmodel.</h2></div>
