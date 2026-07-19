@@ -44,6 +44,9 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   assert.match(page, /REPEATER_INSTALLATION_PRICE = 950/);
   assert.match(page, /ESPA_STANDARD_PRICE = 1500/);
   assert.match(page, /ESPA_CONNECTED_PRICE = 3000/);
+  assert.match(page, /ESPA_APP_YEARLY_PRICE = 100/);
+  assert.match(page, /per app per jaar/);
+  assert.match(page, /aantal apps later vast te stellen/);
   assert.match(page, /plaatsing binnen 12 meter/);
   assert.match(page, /webapplicatie/);
   assert.match(page, /RDI_ONE_TIME = 219/);

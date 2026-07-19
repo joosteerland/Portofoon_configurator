@@ -53,6 +53,7 @@ const SLR5500_PACKAGE_PRICE = 5500;
 const REPEATER_INSTALLATION_PRICE = 950;
 const ESPA_STANDARD_PRICE = 1500;
 const ESPA_CONNECTED_PRICE = 3000;
+const ESPA_APP_YEARLY_PRICE = 100;
 const RDI_ONE_TIME = 219;
 const RDI_ANNUAL_RADIOS = 83;
 const RDI_ANNUAL_REPEATER = 507;
@@ -123,7 +124,7 @@ export default function Home() {
         `Frequentieband: ${band}`, `Vergunning: ${permit}`, `RDI-indicatie indien nodig: ${euro.format(RDI_ONE_TIME)} eenmalig + ${euro.format(annualRdi)} per jaar`,
         `Lader: ${charger}`, `Accu: ${battery}`, `Uitbreidingen: ${extensions.length ? extensions.join(", ") : "Geen"}`,
         `SLR5500-pakket: ${repeater ? `Ja, ${euro.format(SLR5500_PACKAGE_PRICE)} + plaatsing ${euro.format(REPEATER_INSTALLATION_PRICE)}` : "Nee"}`, `IP Site Connect: ${siteConnect}`,
-        `ESPA 4.4.4: ${espa === "none" ? "Nee" : espa === "standard" ? `BMC-meldingen naar portofoons, inclusief plaatsing binnen 12 meter vanaf de BMC, zonder kabels trekken · ${euro.format(ESPA_STANDARD_PRICE)}` : `BMC-meldingen naar portofoons, internet- en appkoppeling en berichten vanuit de webapplicatie · ${euro.format(ESPA_CONNECTED_PRICE)}`}`,
+        `ESPA 4.4.4: ${espa === "none" ? "Nee" : espa === "standard" ? `BMC-meldingen naar portofoons, inclusief plaatsing binnen 12 meter vanaf de BMC, zonder kabels trekken · ${euro.format(ESPA_STANDARD_PRICE)}` : `BMC-meldingen naar portofoons, internet- en appkoppeling en berichten vanuit de webapplicatie · ${euro.format(ESPA_CONNECTED_PRICE)} eenmalig + ${euro.format(ESPA_APP_YEARLY_PRICE)} per app per jaar; aantal apps later vast te stellen`}`,
         `Onderhoud: ${plan.name} · ${euro.format(plan.price)} per jaar · ${plan.response}`,
       ].join("\n");
       const response = await fetch(QUOTE_FORM_URL, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ _subject: `Offerteaanvraag Communicatie configurator · ${companyName}`, _replyto: email, _gotcha: website, bedrijfsnaam: companyName, naam: contactName, email, configuratie: configuration }) });
@@ -197,9 +198,9 @@ export default function Home() {
             <div className="espa-choice-grid">
               <button type="button" className={`repeater-option espa-option ${espa === "none" ? "active" : ""}`} onClick={() => setEspa("none")}><span className="repeater-symbol no-repeater">—</span><span><b>Geen ESPA-module</b><small>Alleen portofooncommunicatie</small></span><strong>Geen meerprijs</strong></button>
               <button type="button" className={`repeater-option espa-option featured ${espa === "standard" ? "active" : ""}`} onClick={() => setEspa("standard")}><span className="recommended-badge">Incl. plaatsing</span><span className="repeater-symbol espa-symbol">ESPA</span><span><b>ESPA 4.4.4</b><small>BMC-meldingen direct op de portofoons</small></span><strong>+ {euro.format(ESPA_STANDARD_PRICE)}</strong></button>
-              <button type="button" className={`repeater-option espa-option connected ${espa === "connected" ? "active" : ""}`} onClick={() => setEspa("connected")}><span className="recommended-badge">Internet & app</span><span className="repeater-symbol espa-symbol">ESPA</span><span><b>ESPA 4.4.4 Connected</b><small>Ook appmeldingen en berichten vanuit de webapplicatie</small></span><strong>+ {euro.format(ESPA_CONNECTED_PRICE)}</strong></button>
+              <button type="button" className={`repeater-option espa-option connected ${espa === "connected" ? "active" : ""}`} onClick={() => setEspa("connected")}><span className="recommended-badge">Internet & app</span><span className="repeater-symbol espa-symbol">ESPA</span><span><b>ESPA 4.4.4 Connected</b><small>Ook appmeldingen en berichten vanuit de webapplicatie · app {euro.format(ESPA_APP_YEARLY_PRICE)} per app per jaar</small></span><strong>+ {euro.format(ESPA_CONNECTED_PRICE)}</strong></button>
             </div>
-            {espa !== "none" && <div className="repeater-package espa-package"><h3>{espaName}</h3><div className="package-includes"><span>BMC-meldingen op portofoons</span><span>Plaatsing binnen 12 meter</span><span>Configuratie</span><span>Inbedrijfstelling</span>{espa === "connected" && <><span>Internetaansluiting</span><span>Meldingen in de app</span><span>Webapplicatie → portofoons</span></>}</div><div className="price-lines"><span><b>Complete ESPA-oplossing</b><strong>{euro.format(espaTotal)}</strong></span></div><p>De prijs is inclusief plaatsing binnen 12 meter vanaf de brandmeldcentrale (BMC). Kabels trekken en een eventueel benodigd kabeltracé zijn niet inbegrepen.</p></div>}
+            {espa !== "none" && <div className="repeater-package espa-package"><h3>{espaName}</h3><div className="package-includes"><span>BMC-meldingen op portofoons</span><span>Plaatsing binnen 12 meter</span><span>Configuratie</span><span>Inbedrijfstelling</span>{espa === "connected" && <><span>Internetaansluiting</span><span>Meldingen in de app</span><span>Webapplicatie → portofoons</span></>}</div><div className="price-lines"><span><b>Complete ESPA-oplossing</b><strong>{euro.format(espaTotal)}</strong></span>{espa === "connected" && <span><b>Applicatie · per app per jaar</b><strong>{euro.format(ESPA_APP_YEARLY_PRICE)}</strong></span>}</div><p>De prijs is inclusief plaatsing binnen 12 meter vanaf de brandmeldcentrale (BMC). Kabels trekken en een eventueel benodigd kabeltracé zijn niet inbegrepen.{espa === "connected" && " Het aantal apps wordt later bepaald; de jaarlijkse appkosten zijn daarom niet opgenomen in de eenmalige investering."}</p></div>}
           </Question>
 
           <Question number="08" title="Is er al een frequentievergunning?" subtitle="Als die er nog niet is, tonen we altijd de indicatieve RDI-kosten.">
