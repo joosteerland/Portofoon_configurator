@@ -20,7 +20,7 @@ export default function ConfiguratorChoice() {
       <section className={styles.choices} aria-label="Kies een configurator">
         <a className={styles.choice} href="./communicatie/">
           <span className={styles.number}>01</span>
-          <span className={styles.icon} aria-hidden="true">COM</span>
+          <span className={styles.icon} aria-hidden="true">🔊</span>
           <span className={styles.content}>
             <small>Direct beschikbaar</small>
             <h2>Communicatie</h2>
@@ -31,9 +31,9 @@ export default function ConfiguratorChoice() {
 
         <a className={`${styles.choice} ${styles.alarming}`} href="./alarmering/">
           <span className={styles.number}>02</span>
-          <span className={styles.icon} aria-hidden="true">ALM</span>
+          <span className={styles.icon} aria-hidden="true">🚨</span>
           <span className={styles.content}>
-            <small>Route voorbereid</small>
+            <small>Direct beschikbaar</small>
             <h2>Alarmering</h2>
             <p>De nieuwe configurator voor alarmeringsoplossingen, inclusief passende onderhoudsmogelijkheden.</p>
             <strong>Open alarmering <i>→</i></strong>

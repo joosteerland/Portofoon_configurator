@@ -137,7 +137,7 @@ export default function Home() {
   return (
     <main>
       <header className="site-header">
-        <a className="brand" href="#configurator" aria-label="Communicatie configurator"><span className="brand-mark" aria-hidden="true"><i /><i /><i /></span><span>COMMUNICATIE <em>CONFIGURATOR</em></span></a>
+        <a className="brand" href="../" aria-label="Terug naar configuratorkeuze"><span className="brand-mark" aria-hidden="true"><i /><i /><i /></span><span>COMMUNICATIE <em>CONFIGURATOR</em></span></a>
         <a className="header-cta" href="#offerte">Vraag offerte aan</a>
       </header>
 

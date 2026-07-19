@@ -55,3 +55,32 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   assert.match(page, /Live totaal excl\. btw/);
   assert.match(layout, /Communicatie configurator/);
 });
+
+test("keeps the alarm configurator pricing and routes explicit", async () => {
+  const alarm = await readFile(new URL("../app/alarmering/AlarmConfigurator.tsx", import.meta.url), "utf8");
+  const pricing = await readFile(new URL("../app/alarmering/pricing.ts", import.meta.url), "utf8");
+  const portal = await readFile(new URL("../app/portal/ConfiguratorChoice.tsx", import.meta.url), "utf8");
+  const alarmEntry = await readFile(new URL("../github-pages-src/alarmering/main.tsx", import.meta.url), "utf8");
+  const communicationEntry = await readFile(new URL("../github-pages-src/communicatie/main.tsx", import.meta.url), "utf8");
+
+  assert.match(pricing, /appYearLicense: 85/);
+  assert.match(pricing, /deviceYearLicense: 85/);
+  assert.match(pricing, /devicePurchase: 300/);
+  assert.match(pricing, /pagerWithCharger: 200/);
+  assert.match(pricing, /simpleBaseStation: 2500/);
+  assert.match(pricing, /extendedCentralEquipment: 4000/);
+  assert.match(pricing, /extendedTransmitter: 3500/);
+  assert.match(pricing, /lite: \{ name: "LITE", price: 1000/);
+  assert.match(pricing, /basis: \{ name: "BASIS", price: 1500/);
+  assert.match(pricing, /uitgebreid: \{ name: "UITGEBREID", price: 2000/);
+  assert.match(alarm, /Swissphone C35-pager/);
+  assert.match(alarm, /multiladeropstelling/);
+  assert.match(alarm, /Firecom Protect/);
+  assert.match(alarm, /Hybride alarmering/);
+  assert.match(portal, /href="\.\/communicatie\/"/);
+  assert.match(portal, /href="\.\/alarmering\/"/);
+  assert.match(portal, /🔊/);
+  assert.match(portal, /🚨/);
+  assert.match(alarmEntry, /AlarmConfigurator/);
+  assert.match(communicationEntry, /\.\.\/\.\.\/app\/page/);
+});

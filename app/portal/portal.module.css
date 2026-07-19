@@ -26,7 +26,7 @@
 .choice:focus-visible,.placeholder>a:focus-visible,.backLink:focus-visible{outline:3px solid rgba(255,213,47,.8);outline-offset:4px}
 .choice.alarming{border-color:#e4c54c;background:#fffdf3}
 .number{position:absolute;top:22px;right:24px;color:#aec0cf;font-size:12px;font-weight:900;letter-spacing:.12em}
-.icon{width:64px;height:64px;display:grid;place-items:center;border-radius:16px;background:var(--blue);color:#fff;font-size:11px;font-weight:900;letter-spacing:.08em}
+.icon{width:64px;height:64px;display:grid;place-items:center;border-radius:16px;background:var(--blue);color:#fff;font-size:27px;font-weight:900}
 .alarming .icon{background:var(--yellow);color:var(--navy)}
 .content{padding-top:2px;display:flex;align-items:flex-start;flex-direction:column}
 .content small{color:var(--blue);font-size:10px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
