@@ -123,6 +123,7 @@ const products: Record<ModelKey, Product> = {
 };
 
 const euro = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", minimumFractionDigits: 2 });
+const SLR5500_PACKAGE_PRICE = 5500;
 
 export default function Home() {
   const [quantity, setQuantity] = useState(8);
@@ -170,10 +171,12 @@ export default function Home() {
     battery !== "standard" ? "accu en bijbehorende technische waarden" : null,
     extensions.length ? "softwarefuncties en licenties" : null,
     permit !== "existing" ? "frequentievergunning of begeleiding" : null,
-    repeater ? "compleet SLR5500-repeaterpakket en dekkingsmeting" : null,
+    repeater && siteConnect === "ja" ? "IP Site Connect-activering en netwerkconfiguratie" : null,
     atex === "yes" ? "exacte ATEX/IECEx-classificatie en gecertificeerde accessoires" : null,
     atex === "unknown" ? "ATEX-beoordeling door een specialist" : null,
   ].filter(Boolean) as string[];
+
+  const systemTotal = recommendation.subtotal + (repeater ? SLR5500_PACKAGE_PRICE : 0);
 
   const toggleExtension = (value: string) => {
     setExtensions((current) => current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
@@ -290,23 +293,39 @@ export default function Home() {
             </div>
           </Question>
 
-          <Question number="07" title="Kies accu, lader en bereik" subtitle="Deze onderdelen worden technisch én financieel in de definitieve offerte verwerkt.">
-            <div className="select-grid three-cols">
-              <label>Accu<select value={battery} onChange={(e) => setBattery(e.target.value as Battery)}><option value="standard">Standaard pakketaccu</option><option value="long">Langere gebruiksduur</option><option value="advice">Laat adviseren</option></select></label>
-              <label>Lader<select value={charger} onChange={(e) => setCharger(e.target.value as Charger)}><option value="none">Geen lader</option><option value="single">Enkelvoudige lader</option><option value="multi">Zesvoudige multilader</option><option value="battery">Reserve-/acculader</option></select></label>
-              <label>Bereikuitbreiding<select value={repeater ? "yes" : "no"} onChange={(e) => setRepeater(e.target.value === "yes")}><option value="no">Geen repeater</option><option value="yes">SLR5500-repeater</option></select></label>
+          <Question number="07" title="Is bereikuitbreiding met een SLR5500 nodig?" subtitle="De repeater krijgt een eigen systeemprijs en wordt direct bij het live totaal opgeteld.">
+            <div className="repeater-choice-grid">
+              <button type="button" className={`repeater-option ${!repeater ? "active" : ""}`} onClick={() => setRepeater(false)} aria-pressed={!repeater}>
+                <span className="repeater-symbol no-repeater" aria-hidden="true">↔</span>
+                <span><b>Zonder repeater</b><small>Direct bereik tussen de portofoons</small></span>
+                <strong>Geen meerprijs</strong>
+              </button>
+              <button type="button" className={`repeater-option featured ${repeater ? "active" : ""}`} onClick={() => setRepeater(true)} aria-pressed={repeater}>
+                <span className="recommended-badge">Bereikuitbreiding</span>
+                <span className="repeater-symbol" aria-hidden="true">SLR</span>
+                <span><b>Compleet SLR5500-pakket</b><small>Repeater, RF-infrastructuur, montage en dekkingsmeting</small></span>
+                <strong>+ {euro.format(SLR5500_PACKAGE_PRICE)}</strong>
+              </button>
             </div>
             {repeater && (
-              <div className="conditional-card">
-                <div className="conditional-title"><b>SLR5500-infrastructuur</b><span>Prijs op aanvraag</span></div>
+              <div className="conditional-card repeater-details">
+                <div className="conditional-title"><b>SLR5500-infrastructuur</b><span>Direct meegerekend</span></div>
+                <div className="package-includes"><span>SLR5500-repeater</span><span>Antenne & kabel</span><span>Duplexfilter</span><span>Voeding</span><span>Programmering</span><span>Montage</span><span>Inbedrijfstelling</span><span>Dekkingsmeting</span></div>
                 <div className="select-grid three-cols">
                   <label>Montage<select value={repeaterMount} onChange={(e) => setRepeaterMount(e.target.value)}><option value="wand">Wandbehuizing</option><option value="rack">Rackbehuizing</option><option value="advice">Laat adviseren</option></select></label>
                   <label>Noodstroom<select value={backupPower} onChange={(e) => setBackupPower(e.target.value)}><option value="ja">Ja</option><option value="nee">Nee</option><option value="advice">Laat adviseren</option></select></label>
                   <label>IP Site Connect<select value={siteConnect} onChange={(e) => setSiteConnect(e.target.value)}><option value="nee">Nee</option><option value="ja">Ja</option><option value="advice">Laat adviseren</option></select></label>
                 </div>
-                <p>Een complete oplossing bevat ook antenne, antennekabel, duplexfilter, voeding, programmering, montage, inbedrijfstelling en een professionele dekkingsmeting.</p>
+                <p>De pakketprijs van {euro.format(SLR5500_PACKAGE_PRICE)} excl. btw is een indicatieve configuratorprijs. Locatieafhankelijke bouwkundige werkzaamheden en aanvullende netwerklicenties kunnen de definitieve offerte wijzigen.</p>
               </div>
             )}
+          </Question>
+
+          <Question number="08" title="Kies accu en laadoplossing" subtitle="Afwijkende accu’s en laders worden technisch en financieel in de definitieve offerte bevestigd.">
+            <div className="select-grid two-cols">
+              <label>Accu<select value={battery} onChange={(e) => setBattery(e.target.value as Battery)}><option value="standard">Standaard pakketaccu</option><option value="long">Langere gebruiksduur</option><option value="advice">Laat adviseren</option></select></label>
+              <label>Lader<select value={charger} onChange={(e) => setCharger(e.target.value as Charger)}><option value="none">Geen lader</option><option value="single">Enkelvoudige lader</option><option value="multi">Zesvoudige multilader</option><option value="battery">Reserve-/acculader</option></select></label>
+            </div>
           </Question>
         </div>
 
@@ -331,9 +350,11 @@ export default function Home() {
           {atex === "yes" && <div className="result-warning safe"><b>{atexHazard} · {atexZone} · {atexGroup}</b><span>Temperatuurklasse: {temperatureClass}. Definitief te valideren op offerte.</span></div>}
 
           <div className="price-block">
-            <span>Openbare vanafprijs per portofoon</span>
-            <strong>{euro.format(recommendation.product.price)}</strong>
-            <small>{quantity} × radio = {euro.format(recommendation.subtotal)} excl. btw</small>
+            <span>Indicatief live systeemtotaal</span>
+            <strong>{euro.format(systemTotal)}</strong>
+            <small>{quantity} × {recommendation.product.name} = {euro.format(recommendation.subtotal)}</small>
+            {repeater && <small>Compleet SLR5500-pakket = {euro.format(SLR5500_PACKAGE_PRICE)}</small>}
+            <small>Alles exclusief btw</small>
           </div>
           <p className="included-copy">{recommendation.product.included}</p>
 
@@ -341,10 +362,15 @@ export default function Home() {
             <summary>Offerte-aanvullingen <span>+</span></summary>
             {quoteItems.length ? <ul>{quoteItems.map((item) => <li key={item}>{item}</li>)}</ul> : <p>Geen aanvullende prijscomponenten geselecteerd.</p>}
           </details>
-          <div className="quote-status"><span>Definitieve systeemprijs</span><b>{quoteItems.length ? "Offerte op maat" : euro.format(recommendation.subtotal)}</b></div>
+          <div className="quote-status"><span>Berekend subtotaal</span><b>{euro.format(systemTotal)}</b></div>
           <p className="fineprint">Prijsbenchmark gecontroleerd op 19 juli 2026, exclusief btw. Geen offerte. Beschikbaarheid, pakketinhoud, licenties, frequenties en certificering worden bij bestelling bevestigd.</p>
         </aside>
       </section>
+
+      <div className="floating-price" role="status" aria-live="polite">
+        <div><small>Live totaal excl. btw</small><b>{euro.format(systemTotal)}</b></div>
+        <span>{recommendation.product.name}{repeater ? " + SLR5500" : ""}</span>
+      </div>
 
       <section className="comparison" aria-labelledby="compare-title">
         <div className="section-heading"><span className="step-kicker">Modeloverzicht</span><h2 id="compare-title">Van praktische werkportofoon tot ATEX-topmodel.</h2></div>

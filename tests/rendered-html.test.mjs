@@ -24,8 +24,8 @@ test("server-renders the professional configurator", async () => {
   assert.match(html, /Configureer de juiste/);
   assert.match(html, /Is ATEX of IECEx verplicht\?/);
   assert.match(html, /Motorola R5/);
-  assert.match(html, /€ 435,95/);
-  assert.match(html, /Openbare vanafprijs per portofoon/);
+  assert.match(html, /3\.487,60/);
+  assert.match(html, /Indicatief live systeemtotaal/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
 });
 
@@ -38,6 +38,8 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   }
   assert.match(page, /Standaard R7-accessoires zijn niet uitwisselbaar/);
   assert.match(page, /SLR5500-infrastructuur/);
+  assert.match(page, /SLR5500_PACKAGE_PRICE = 5500/);
+  assert.match(page, /Live totaal excl\. btw/);
   assert.match(page, /Professionele UHF\/VHF-uitvoeringen zijn in Nederland vergunningsplichtig/);
   assert.match(page, /Prijsbenchmark gecontroleerd op 19 juli 2026/);
   assert.match(layout, /professionele Motorola-configurator/);
