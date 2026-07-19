@@ -7,7 +7,7 @@ export const ALARM_PRICES = {
   devicePurchase: 300,
   pagerWithCharger: 200,
   simpleBaseStation: 2500,
-  extendedCentralEquipment: 4000,
+  extendedCentralEquipment: 3000,
   extendedTransmitter: 3500,
 } as const;
 

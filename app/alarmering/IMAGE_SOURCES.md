@@ -11,7 +11,7 @@
 - Bestand: `public/alarmering/centrale-apparatuur.jpg`
 - Gemaakt met de ingebouwde OpenAI-beeldgenerator.
 - Gebruik: merkneutraal conceptvoorstel; het beeld vertegenwoordigt geen definitief productmodel.
-- Prompt: realistische B2B-productrender van een compacte donkerblauwe 19-inch besturingskast met centrale controller, twee modulaire RF-zenders, UPS/noodstroom, antenneverdeling en nette patchkabels op een lichte studiobackground; zonder mensen, logo's, merknamen, leesbare tekst of watermerk.
+- Prompt: realistische B2B-productfoto van een compacte, volledig gesloten zwarte 19-inch rackkast met een dichte metalen voordeur, subtiele ventilatiesleuven en een slot op een lichte studiobackground; interne apparatuur en bekabeling niet zichtbaar; zonder mensen, logo's, merknamen, leesbare tekst of watermerk.
 
 ## Smartphone
 

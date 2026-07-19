@@ -87,7 +87,7 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(pricing, /devicePurchase: 300/);
   assert.match(pricing, /pagerWithCharger: 200/);
   assert.match(pricing, /simpleBaseStation: 2500/);
-  assert.match(pricing, /extendedCentralEquipment: 4000/);
+  assert.match(pricing, /extendedCentralEquipment: 3000/);
   assert.match(pricing, /extendedTransmitter: 3500/);
   assert.match(pricing, /Math\.max\(1, input\.transmitters, input\.locations\)/);
   assert.doesNotMatch(pricing, /input\.buildings > 1 \? input\.buildings : 1/);
