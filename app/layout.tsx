@@ -6,7 +6,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const requestHeaders = await headers();
   const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const image = `${protocol}://${host}/og.png`;
+  const image = `${protocol}://${host}/og-calm.png`;
   return {
     title: "PortofoonPrijs — professionele Motorola-configurator",
     description: "Configureer een passende Motorola R2, R5, R7 of R7Ex en ontvang een onderbouwd modeladvies met actuele openbare vanafprijs.",
