@@ -1,9 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import ConfiguratorChoice from "../app/portal/ConfiguratorChoice";
+import AlarmPlaceholder from "../../app/portal/AlarmPlaceholder";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ConfiguratorChoice />
+    <AlarmPlaceholder />
   </StrictMode>,
 );
