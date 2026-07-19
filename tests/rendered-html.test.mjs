@@ -73,7 +73,10 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(pricing, /lite: \{ name: "LITE", price: 1000/);
   assert.match(pricing, /basis: \{ name: "BASIS", price: 1500/);
   assert.match(pricing, /uitgebreid: \{ name: "UITGEBREID", price: 2000/);
-  assert.match(alarm, /Swissphone C35-pager/);
+  assert.match(alarm, /title="Alarmontvanger"/);
+  assert.match(alarm, /image="\.\/smartphone\.png"/);
+  assert.match(alarm, /image="\.\/twig-embody\.jpg"/);
+  assert.match(alarm, /image="\.\/swissphone-c35\.png"/);
   assert.match(alarm, /multiladeropstelling/);
   assert.match(alarm, /Firecom Protect/);
   assert.match(alarm, /Hybride alarmering/);
