@@ -58,7 +58,7 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   assert.match(page, /telefoonnummer: phone/);
   assert.match(page, /firecom-logo-secondary\.png/);
   assert.match(layout, /Communicatie configurator/);
-  assert.match(layout, /firecom-favicon-2026-32\.png/);
+  assert.match(layout, /firecom-favicon-brand-32\.png/);
 });
 
 test("uses the Firecom favicon on every public route", async () => {
@@ -70,9 +70,9 @@ test("uses the Firecom favicon on every public route", async () => {
 
   for (const page of pages) {
     const html = await readFile(new URL(page, import.meta.url), "utf8");
-    assert.match(html, /firecom-favicon-2026-32\.png/);
-    assert.match(html, /firecom-favicon-2026-192\.png/);
-    assert.match(html, /firecom-apple-touch-icon-2026\.png/);
+    assert.match(html, /firecom-favicon-brand-32\.png/);
+    assert.match(html, /firecom-favicon-brand-192\.png/);
+    assert.match(html, /firecom-apple-touch-icon-brand-180\.png/);
     assert.doesNotMatch(html, /favicon\.svg/);
   }
 });
@@ -119,6 +119,9 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(alarm, /https:\/\/formspree\.io\/f\/mdaqgbjj/);
   assert.match(alarm, /Bedankt! Uw alarmeringsconfiguratie is naar Firecom verstuurd/);
   assert.match(alarm, /multiladeropstelling/);
+  assert.match(alarm, /kleine fabriek of een kantoorpand heeft meestal voldoende aan 1 zender/);
+  assert.match(alarm, /grote fabriek gebruikt doorgaans 2 zenders op strategische daklocaties/);
+  assert.match(alarm, /inclusief buitenantenne/);
   assert.match(alarm, /Firecom Protect/);
   assert.match(alarm, /Hybride alarmering/);
   assert.match(portal, /href="\.\/communicatie\/"/);

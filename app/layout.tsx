@@ -12,10 +12,10 @@ export async function generateMetadata(): Promise<Metadata> {
     description: "Stel een professionele Motorola-portofoonoplossing samen en ontvang een indicatieve prijs en een passende offerte van Firecom.",
     icons: {
       icon: [
-        { url: "/firecom-favicon-2026-32.png", type: "image/png", sizes: "32x32" },
-        { url: "/firecom-favicon-2026-192.png", type: "image/png", sizes: "192x192" },
+        { url: "/firecom-favicon-brand-32.png", type: "image/png", sizes: "32x32" },
+        { url: "/firecom-favicon-brand-192.png", type: "image/png", sizes: "192x192" },
       ],
-      apple: [{ url: "/firecom-apple-touch-icon-2026.png", type: "image/png", sizes: "180x180" }],
+      apple: [{ url: "/firecom-apple-touch-icon-brand-180.png", type: "image/png", sizes: "180x180" }],
     },
     openGraph: {
       title: "Communicatie configurator | Firecom",
