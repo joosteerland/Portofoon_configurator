@@ -26,6 +26,7 @@ test("server-renders the professional configurator", async () => {
   assert.match(html, /Motorola R5/);
   assert.match(html, /2\.838,00/);
   assert.match(html, /Indicatieve investering/);
+  assert.match(html, /ESPA 4\.4\.4/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
 });
 
@@ -41,6 +42,10 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   assert.match(page, /SLR5500_PACKAGE_PRICE = 5500/);
   assert.match(page, /PROGRAMMING_PRICE = 25/);
   assert.match(page, /REPEATER_INSTALLATION_PRICE = 950/);
+  assert.match(page, /ESPA_STANDARD_PRICE = 1500/);
+  assert.match(page, /ESPA_CONNECTED_PRICE = 3000/);
+  assert.match(page, /plaatsing binnen 12 meter/);
+  assert.match(page, /webapplicatie/);
   assert.match(page, /RDI_ONE_TIME = 219/);
   assert.match(page, /LITE/);
   assert.match(page, /UITGEBREID/);

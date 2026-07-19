@@ -13,6 +13,7 @@ type Permit = "existing" | "help" | "unknown";
 type Charger = "none" | "single" | "multi" | "battery";
 type Battery = "standard" | "long" | "advice";
 type Maintenance = "none" | "lite" | "basis" | "uitgebreid";
+type Espa = "none" | "standard" | "connected";
 type ModelKey = "r2" | "r5nkp" | "r5lkp" | "r7fkp" | "r7premium" | "r7exnkp" | "r7exfkp";
 
 type Product = {
@@ -50,6 +51,8 @@ const QUOTE_FORM_URL = "https://formspree.io/f/mdaqgbjj";
 const PROGRAMMING_PRICE = 25;
 const SLR5500_PACKAGE_PRICE = 5500;
 const REPEATER_INSTALLATION_PRICE = 950;
+const ESPA_STANDARD_PRICE = 1500;
+const ESPA_CONNECTED_PRICE = 3000;
 const RDI_ONE_TIME = 219;
 const RDI_ANNUAL_RADIOS = 83;
 const RDI_ANNUAL_REPEATER = 507;
@@ -70,6 +73,7 @@ export default function Home() {
   const [extensions, setExtensions] = useState<string[]>([]);
   const [repeater, setRepeater] = useState(false);
   const [siteConnect, setSiteConnect] = useState("nee");
+  const [espa, setEspa] = useState<Espa>("none");
   const [maintenance, setMaintenance] = useState<Maintenance>("none");
   const [companyName, setCompanyName] = useState("");
   const [contactName, setContactName] = useState("");
@@ -92,12 +96,14 @@ export default function Home() {
 
   const programmingTotal = quantity * PROGRAMMING_PRICE;
   const repeaterTotal = repeater ? SLR5500_PACKAGE_PRICE + REPEATER_INSTALLATION_PRICE : 0;
-  const systemTotal = recommendation.subtotal + programmingTotal + repeaterTotal;
+  const espaTotal = espa === "standard" ? ESPA_STANDARD_PRICE : espa === "connected" ? ESPA_CONNECTED_PRICE : 0;
+  const espaName = espa === "standard" ? "ESPA 4.4.4" : espa === "connected" ? "ESPA 4.4.4 Connected" : "Geen ESPA-module";
+  const systemTotal = recommendation.subtotal + programmingTotal + repeaterTotal + espaTotal;
   const annualRdi = repeater ? RDI_ANNUAL_REPEATER : RDI_ANNUAL_RADIOS;
   const plan = maintenancePlans[maintenance];
 
   const applyPreset = (preset: "simple" | "logistics" | "industrial" | "atex") => {
-    if (preset === "simple") { setAtex("no"); setDisplay("none"); setEnvironment("normal"); setNoise("normal"); setSafety("none"); setChannels("1-3"); setRepeater(false); }
+    if (preset === "simple") { setAtex("no"); setDisplay("none"); setEnvironment("normal"); setNoise("normal"); setSafety("none"); setChannels("1-3"); setRepeater(false); setEspa("none"); }
     if (preset === "logistics") { setAtex("no"); setDisplay("small"); setEnvironment("wet"); setNoise("loud"); setSafety("basic"); setChannels("3-10"); }
     if (preset === "industrial") { setAtex("no"); setDisplay("none"); setEnvironment("heavy"); setNoise("extreme"); setSafety("advanced"); setChannels("10+"); }
     if (preset === "atex") { setAtex("yes"); setDisplay("none"); setEnvironment("heavy"); setNoise("extreme"); setSafety("advanced"); setChannels("3-10"); }
@@ -117,6 +123,7 @@ export default function Home() {
         `Frequentieband: ${band}`, `Vergunning: ${permit}`, `RDI-indicatie indien nodig: ${euro.format(RDI_ONE_TIME)} eenmalig + ${euro.format(annualRdi)} per jaar`,
         `Lader: ${charger}`, `Accu: ${battery}`, `Uitbreidingen: ${extensions.length ? extensions.join(", ") : "Geen"}`,
         `SLR5500-pakket: ${repeater ? `Ja, ${euro.format(SLR5500_PACKAGE_PRICE)} + plaatsing ${euro.format(REPEATER_INSTALLATION_PRICE)}` : "Nee"}`, `IP Site Connect: ${siteConnect}`,
+        `ESPA 4.4.4: ${espa === "none" ? "Nee" : espa === "standard" ? `BMC-meldingen naar portofoons, inclusief plaatsing binnen 12 meter vanaf de BMC, zonder kabels trekken · ${euro.format(ESPA_STANDARD_PRICE)}` : `BMC-meldingen naar portofoons, internet- en appkoppeling en berichten vanuit de webapplicatie · ${euro.format(ESPA_CONNECTED_PRICE)}`}`,
         `Onderhoud: ${plan.name} · ${euro.format(plan.price)} per jaar · ${plan.response}`,
       ].join("\n");
       const response = await fetch(QUOTE_FORM_URL, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ _subject: `Offerteaanvraag Communicatie configurator · ${companyName}`, _replyto: email, _gotcha: website, bedrijfsnaam: companyName, naam: contactName, email, configuratie: configuration }) });
@@ -186,13 +193,22 @@ export default function Home() {
             {repeater && <div className="repeater-package"><h3>Complete repeateroplossing</h3><div className="package-includes"><span>SLR5500-repeater</span><span>Antenne & kabel</span><span>Duplexfilter</span><span>Noodstroom</span><span>Programmering</span><span>Plaatsing</span><span>Inbedrijfstelling</span><span>Dekkingsmeting</span></div><div className="price-lines"><span><b>Repeaterpakket</b><strong>{euro.format(SLR5500_PACKAGE_PRICE)}</strong></span><span><b>Plaatsing, indicatief</b><strong>{euro.format(REPEATER_INSTALLATION_PRICE)}</strong></span></div><label className="select-label">Meerdere locaties koppelen<select value={siteConnect} onChange={(e) => setSiteConnect(e.target.value)}><option value="nee">Nee</option><option value="ja">Ja, IP Site Connect</option><option value="advice">Laat adviseren</option></select></label><p>Locatieafhankelijke bouwkundige werkzaamheden en aanvullende netwerklicenties kunnen de definitieve offerte wijzigen.</p></div>}
           </Question>
 
-          <Question number="07" title="Is er al een frequentievergunning?" subtitle="Als die er nog niet is, tonen we altijd de indicatieve RDI-kosten.">
+          <Question number="07" title="Wilt u BMC-meldingen op de portofoons ontvangen?" subtitle="Met een ESPA 4.4.4-module komen berichten uit de brandmeldcentrale direct op de portofoons binnen.">
+            <div className="espa-choice-grid">
+              <button type="button" className={`repeater-option espa-option ${espa === "none" ? "active" : ""}`} onClick={() => setEspa("none")}><span className="repeater-symbol no-repeater">—</span><span><b>Geen ESPA-module</b><small>Alleen portofooncommunicatie</small></span><strong>Geen meerprijs</strong></button>
+              <button type="button" className={`repeater-option espa-option featured ${espa === "standard" ? "active" : ""}`} onClick={() => setEspa("standard")}><span className="recommended-badge">Incl. plaatsing</span><span className="repeater-symbol espa-symbol">ESPA</span><span><b>ESPA 4.4.4</b><small>BMC-meldingen direct op de portofoons</small></span><strong>+ {euro.format(ESPA_STANDARD_PRICE)}</strong></button>
+              <button type="button" className={`repeater-option espa-option connected ${espa === "connected" ? "active" : ""}`} onClick={() => setEspa("connected")}><span className="recommended-badge">Internet & app</span><span className="repeater-symbol espa-symbol">ESPA</span><span><b>ESPA 4.4.4 Connected</b><small>Ook appmeldingen en berichten vanuit de webapplicatie</small></span><strong>+ {euro.format(ESPA_CONNECTED_PRICE)}</strong></button>
+            </div>
+            {espa !== "none" && <div className="repeater-package espa-package"><h3>{espaName}</h3><div className="package-includes"><span>BMC-meldingen op portofoons</span><span>Plaatsing binnen 12 meter</span><span>Configuratie</span><span>Inbedrijfstelling</span>{espa === "connected" && <><span>Internetaansluiting</span><span>Meldingen in de app</span><span>Webapplicatie → portofoons</span></>}</div><div className="price-lines"><span><b>Complete ESPA-oplossing</b><strong>{euro.format(espaTotal)}</strong></span></div><p>De prijs is inclusief plaatsing binnen 12 meter vanaf de brandmeldcentrale (BMC). Kabels trekken en een eventueel benodigd kabeltracé zijn niet inbegrepen.</p></div>}
+          </Question>
+
+          <Question number="08" title="Is er al een frequentievergunning?" subtitle="Als die er nog niet is, tonen we altijd de indicatieve RDI-kosten.">
             <div className="choice-grid three"><Choice active={permit === "existing"} title="Ja" subtitle="Vergunning is aanwezig" onClick={() => setPermit("existing")} /><Choice active={permit === "help"} title="Nee, hulp gewenst" subtitle="Firecom vult de papieren in" onClick={() => setPermit("help")} /><Choice active={permit === "unknown"} title="Weet ik niet" subtitle="Firecom controleert dit" onClick={() => setPermit("unknown")} /></div>
             {permit !== "existing" && <div className="permit-card"><div><span>RDI · eenmalig</span><strong>{euro.format(RDI_ONE_TIME)}</strong></div><div><span>RDI · per jaar</span><strong>{euro.format(annualRdi)}</strong></div><p>De vergunning voor uw portofoonnetwerk wordt rechtstreeks betaald aan het Rijksinspectie Digitale Infrastructuur (RDI). Firecom vult de papieren zover mogelijk voor u in; u verstuurt de aanvraag zelf. Met één repeater bestaat het jaarlijkse bedrag van {euro.format(RDI_ANNUAL_REPEATER)} uit {euro.format(RDI_ANNUAL_RADIOS)} per vergunning plus {euro.format(424)} per vaste post/repeater. Deze bedragen gelden voor kalenderjaar 2022 en kunnen inmiddels zijn gewijzigd. Firecom is niet aansprakelijk voor tariefwijzigingen.</p><a href="https://zoek.officielebekendmakingen.nl/stcrt-2021-45605.html" target="_blank" rel="noreferrer">Bekijk de officiële regeling en tarieventabel ↗</a></div>}
           </Question>
 
           <div id="onderhoud" />
-          <Question number="08" title="Welk onderhoudsniveau past bij uw organisatie?" subtitle="Alle drie onderhoudscontracten worden altijd aangeboden. Ook zonder contract blijft service mogelijk.">
+          <Question number="09" title="Welk onderhoudsniveau past bij uw organisatie?" subtitle="Alle drie onderhoudscontracten worden altijd aangeboden. Ook zonder contract blijft service mogelijk.">
             <div className="maintenance-grid">{(Object.keys(maintenancePlans) as Maintenance[]).map((key) => { const item = maintenancePlans[key]; return <button type="button" key={key} className={`maintenance-card ${maintenance === key ? "active" : ""} ${key === "basis" ? "recommended" : ""}`} onClick={() => setMaintenance(key)}>{key === "basis" && <em>Meest gekozen</em>}<span className="radio-dot" /><h3>{item.name}</h3><strong>{item.price ? `${euro.format(item.price)} / jaar` : "Geen jaarlijkse kosten"}</strong><b>{item.response}</b><ul>{item.summary.map((line) => <li key={line}>{line}</li>)}</ul></button>; })}</div>
             <p className="maintenance-note">Alle bedragen zijn excl. btw. Contractduur: 1 jaar. Onderhoudswerkzaamheden worden volgens het voorstel berekend tegen {euro.format(105)} per uur.</p>
           </Question>
@@ -204,7 +220,7 @@ export default function Home() {
           <span className="model-pill">{recommendation.product.label}</span><h2>{recommendation.product.name}</h2><p className="variant-copy">{recommendation.product.variant} · {band}</p><code className="sku">SKU {recommendation.product.sku}</code><p className="model-copy">{recommendation.product.why}</p>
           <div className="spec-grid"><div><small>Bescherming</small><b>{recommendation.product.protection}</b></div><div><small>Audio</small><b>{recommendation.product.audio}</b></div><div><small>Accuduur</small><b>{recommendation.product.battery}</b></div><div><small>Groepen</small><b>{channels}</b></div></div>
           <div className="price-block"><span>Indicatieve investering</span><strong>{euro.format(systemTotal)}</strong><small>exclusief btw</small></div>
-          <div className="summary-lines"><span><b>{quantity} × {recommendation.product.name}</b><strong>{euro.format(recommendation.subtotal)}</strong></span><span><b>Programmering</b><strong>{euro.format(programmingTotal)}</strong></span>{repeater && <><span><b>SLR5500-pakket</b><strong>{euro.format(SLR5500_PACKAGE_PRICE)}</strong></span><span><b>Plaatsing repeater</b><strong>{euro.format(REPEATER_INSTALLATION_PRICE)}</strong></span></>}<span className="total"><b>Totaal excl. btw</b><strong>{euro.format(systemTotal)}</strong></span></div>
+          <div className="summary-lines"><span><b>{quantity} × {recommendation.product.name}</b><strong>{euro.format(recommendation.subtotal)}</strong></span><span><b>Programmering</b><strong>{euro.format(programmingTotal)}</strong></span>{repeater && <><span><b>SLR5500-pakket</b><strong>{euro.format(SLR5500_PACKAGE_PRICE)}</strong></span><span><b>Plaatsing repeater</b><strong>{euro.format(REPEATER_INSTALLATION_PRICE)}</strong></span></>}{espa !== "none" && <span><b>{espaName}</b><strong>{euro.format(espaTotal)}</strong></span>}<span className="total"><b>Totaal excl. btw</b><strong>{euro.format(systemTotal)}</strong></span></div>
           {permit !== "existing" && <div className="aside-notice"><b>RDI rechtstreeks te betalen</b><span>{euro.format(RDI_ONE_TIME)} eenmalig + {euro.format(annualRdi)} per jaar (tarief 2022)</span></div>}
           <div className="aside-notice maintenance"><b>Onderhoud: {plan.name}</b><span>{plan.price ? `${euro.format(plan.price)} per jaar` : "Geen jaarlijkse kosten"} · {plan.response}</span></div>
           <a className="aside-cta" href="#offerte">Ontvang een echte offerte</a>
@@ -212,7 +228,7 @@ export default function Home() {
         </aside>
       </section>
 
-      <div className="floating-price"><div><small>Live totaal excl. btw</small><b>{euro.format(systemTotal)}</b></div><span>{quantity} × {recommendation.product.name}{repeater ? " + SLR5500" : ""}</span></div>
+      <div className="floating-price"><div><small>Live totaal excl. btw</small><b>{euro.format(systemTotal)}</b></div><span>{quantity} × {recommendation.product.name}{repeater ? " + SLR5500" : ""}{espa !== "none" ? " + ESPA 4.4.4" : ""}</span></div>
 
       <section className="quote-request" id="offerte" aria-labelledby="quote-title">
         <div className="quote-intro"><span className="step-kicker">Laatste stap</span><h2 id="quote-title">Ontvang een echte offerte van Firecom.</h2><p>Laat uw gegevens achter. Firecom controleert de configuratie, vergunning, bereik en pakketinhoud en neemt contact met u op.</p><div className="quote-summary"><span><small>Geselecteerd</small><b>{quantity} × {recommendation.product.name}</b></span><span><small>Investering</small><b>{euro.format(systemTotal)} excl. btw</b></span><span><small>Onderhoud</small><b>{plan.name}{plan.price ? ` · ${euro.format(plan.price)}/jaar` : ""}</b></span></div></div>
