@@ -54,6 +54,8 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   assert.match(page, /LITE/);
   assert.match(page, /UITGEBREID/);
   assert.match(page, /Live totaal excl\. btw/);
+  assert.match(page, /Telefoonnummer<input type="tel"/);
+  assert.match(page, /telefoonnummer: phone/);
   assert.match(page, /firecom-logo-secondary\.png/);
   assert.match(layout, /Communicatie configurator/);
   assert.match(layout, /firecom-favicon-2026-32\.png/);
