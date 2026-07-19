@@ -122,6 +122,8 @@ const products: Record<ModelKey, Product> = {
   },
 };
 
+const QUOTE_FORM_URL = "https://formspree.io/f/mdaqgbjj";
+
 const euro = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", minimumFractionDigits: 2 });
 const SLR5500_PACKAGE_PRICE = 5500;
 
@@ -194,49 +196,53 @@ export default function Home() {
     setQuoteMessage("");
 
     try {
-      const response = await fetch("/api/quote", {
+      const configuration = [
+        `Model: ${recommendation.product.name}`,
+        `Uitvoering: ${recommendation.product.variant}`,
+        `SKU: ${recommendation.product.sku}`,
+        `Aantal portofoons: ${quantity}`,
+        `Stuksprijs excl. btw: ${euro.format(recommendation.product.price)}`,
+        `Subtotaal portofoons excl. btw: ${euro.format(recommendation.subtotal)}`,
+        `Indicatief systeemtotaal excl. btw: ${euro.format(systemTotal)}`,
+        `ATEX: ${atex}`,
+        `ATEX-risico: ${atexHazard}`,
+        `ATEX-zone: ${atexZone}`,
+        `Gasgroep: ${atexGroup}`,
+        `Temperatuurklasse: ${temperatureClass}`,
+        `Display: ${display}`,
+        `Werkomgeving: ${environment}`,
+        `Kanalen: ${channels}`,
+        `Veiligheid: ${safety}`,
+        `Geluidsniveau: ${noise}`,
+        `Frequentieband: ${band}`,
+        `Vergunning: ${permit}`,
+        `Lader: ${charger}`,
+        `Accu: ${battery}`,
+        `Uitbreidingen: ${extensions.length ? extensions.join(", ") : "Geen"}`,
+        `SLR5500-pakket: ${repeater ? "Ja" : "Nee"}`,
+        `Repeatermontage: ${repeaterMount}`,
+        `Noodstroom: ${backupPower}`,
+        `IP Site Connect: ${siteConnect}`,
+        `Nog te offreren: ${quoteItems.length ? quoteItems.join(", ") : "Geen"}`,
+      ].join("\n");
+
+      const response = await fetch(QUOTE_FORM_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
-          companyName,
-          contactName,
+          _subject: `Offerteaanvraag configurator · ${companyName} · ${quantity}× ${recommendation.product.name}`,
+          _replyto: email,
+          _gotcha: website,
+          bedrijfsnaam: companyName,
+          naam: contactName,
           email,
-          website,
-          configuration: {
-            model: recommendation.product.name,
-            variant: recommendation.product.variant,
-            sku: recommendation.product.sku,
-            quantity,
-            unitPrice: recommendation.product.price,
-            radioSubtotal: recommendation.subtotal,
-            systemTotal,
-            atex,
-            atexHazard,
-            atexZone,
-            atexGroup,
-            temperatureClass,
-            display,
-            environment,
-            channels,
-            safety,
-            noise,
-            band,
-            permit,
-            charger,
-            battery,
-            extensions,
-            repeater,
-            repeaterMount,
-            backupPower,
-            siteConnect,
-            quoteItems,
-          },
+          configuratie: configuration,
         }),
       });
-      const result = await response.json() as { message?: string };
-      if (!response.ok) throw new Error(result.message || "De aanvraag kon niet worden verzonden.");
+      const result = await response.json().catch(() => ({})) as { error?: string };
+      if (!response.ok) throw new Error(result.error || "De aanvraag kon niet worden verzonden.");
       setQuoteState("sent");
-      setQuoteMessage(result.message || "Je aanvraag is ontvangen.");
+      setQuoteMessage("Bedankt! Je configuratie is naar Firecom verstuurd. Een specialist neemt contact met je op.");
     } catch (error) {
       setQuoteState("error");
       setQuoteMessage(error instanceof Error ? error.message : "De aanvraag kon niet worden verzonden.");
