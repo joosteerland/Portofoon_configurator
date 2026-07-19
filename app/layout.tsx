@@ -8,18 +8,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const image = `${protocol}://${host}/og.png`;
   return {
-    title: "PortofoonPrijs — bereken jouw portofoonsysteem",
-    description: "Bereken in één minuut welk Motorola portofoonsysteem past, of een repeater nodig is en wat de globale investering wordt.",
+    title: "PortofoonPrijs — professionele Motorola-configurator",
+    description: "Configureer een passende Motorola R2, R5, R7 of R7Ex en ontvang een onderbouwd modeladvies met actuele openbare vanafprijs.",
     openGraph: {
-      title: "Wat kost jouw portofoonsysteem?",
-      description: "Direct een Motorola-advies, repeateradvies en globale prijsindicatie.",
+      title: "Configureer de juiste portofoonoplossing",
+      description: "Van Motorola R2 tot explosieveilige R7Ex — technisch modeladvies met actuele vanafprijs.",
       type: "website",
       images: [{ url: image, width: 1536, height: 1024, alt: "PortofoonPrijs calculator" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Wat kost jouw portofoonsysteem?",
-      description: "Direct een Motorola-advies, repeateradvies en globale prijsindicatie.",
+      title: "Configureer de juiste portofoonoplossing",
+      description: "Van Motorola R2 tot explosieveilige R7Ex — technisch modeladvies met actuele vanafprijs.",
       images: [image],
     },
   };
