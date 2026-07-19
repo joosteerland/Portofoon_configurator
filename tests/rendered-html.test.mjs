@@ -53,7 +53,25 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   assert.match(page, /LITE/);
   assert.match(page, /UITGEBREID/);
   assert.match(page, /Live totaal excl\. btw/);
+  assert.match(page, /firecom-logo-secondary\.jpg/);
   assert.match(layout, /Communicatie configurator/);
+  assert.match(layout, /firecom-favicon-2026-32\.png/);
+});
+
+test("uses the Firecom favicon on every public route", async () => {
+  const pages = [
+    "../github-pages-src/index.html",
+    "../github-pages-src/communicatie/index.html",
+    "../github-pages-src/alarmering/index.html",
+  ];
+
+  for (const page of pages) {
+    const html = await readFile(new URL(page, import.meta.url), "utf8");
+    assert.match(html, /firecom-favicon-2026-32\.png/);
+    assert.match(html, /firecom-favicon-2026-192\.png/);
+    assert.match(html, /firecom-apple-touch-icon-2026\.png/);
+    assert.doesNotMatch(html, /favicon\.svg/);
+  }
 });
 
 test("keeps the alarm configurator pricing and routes explicit", async () => {
@@ -89,6 +107,9 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(alarm, /Hybride alarmering/);
   assert.match(portal, /href="\.\/communicatie\/"/);
   assert.match(portal, /href="\.\/alarmering\/"/);
+  assert.match(portal, /firecom-logo-secondary\.jpg/);
+  assert.match(portal, /Firecom <b>online configurator<\/b>/);
+  assert.match(alarm, /firecom-logo-secondary\.jpg/);
   assert.match(portal, /🔊/);
   assert.match(portal, /🚨/);
   assert.match(alarmEntry, /AlarmConfigurator/);
