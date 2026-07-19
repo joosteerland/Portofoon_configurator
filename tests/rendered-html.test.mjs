@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { syncAutomaticIndependence } from "../app/alarmering/pricing.ts";
 
 async function render() {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -74,6 +75,14 @@ test("uses the Firecom favicon on every public route", async () => {
   }
 });
 
+test("releases automatic telecom independence without overriding a manual choice", () => {
+  assert.equal(syncAutomaticIndependence("off", true), "automatic");
+  assert.equal(syncAutomaticIndependence("automatic", true), "automatic");
+  assert.equal(syncAutomaticIndependence("automatic", false), "off");
+  assert.equal(syncAutomaticIndependence("manual", true), "manual");
+  assert.equal(syncAutomaticIndependence("manual", false), "manual");
+});
+
 test("keeps the alarm configurator pricing and routes explicit", async () => {
   const alarm = await readFile(new URL("../app/alarmering/AlarmConfigurator.tsx", import.meta.url), "utf8");
   const pricing = await readFile(new URL("../app/alarmering/pricing.ts", import.meta.url), "utf8");
@@ -89,6 +98,8 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(pricing, /simpleBaseStation: 2500/);
   assert.match(pricing, /extendedCentralEquipment: 3000/);
   assert.match(pricing, /extendedTransmitter: 3500/);
+  assert.match(pricing, /syncAutomaticIndependence/);
+  assert.match(pricing, /current === "automatic" \? "off" : current/);
   assert.match(pricing, /Math\.max\(1, input\.transmitters, input\.locations\)/);
   assert.doesNotMatch(pricing, /input\.buildings > 1 \? input\.buildings : 1/);
   assert.match(pricing, /lite: \{ name: "LITE", price: 1000/);
@@ -99,6 +110,9 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(alarm, /image="\.\/twig-embody\.jpg"/);
   assert.match(alarm, /image="\.\/swissphone-c35\.png"/);
   assert.match(alarm, /receiver-icon-device/);
+  assert.match(alarm, /syncAutomaticIndependence\(current, value >= 3 \|\| espa\)/);
+  assert.match(alarm, /syncAutomaticIndependence\(current, reliability >= 3 \|\| nextEspa\)/);
+  assert.match(alarm, /current === "off" \? "manual" : "off"/);
   assert.match(alarmStyles, /alarm-product-grid img\{display:block;width:calc\(100% - 36px\);height:190px;object-fit:contain/);
   assert.match(alarm, /https:\/\/formspree\.io\/f\/mdaqgbjj/);
   assert.match(alarm, /Bedankt! Uw alarmeringsconfiguratie is naar Firecom verstuurd/);

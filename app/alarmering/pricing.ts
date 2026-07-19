@@ -1,5 +1,11 @@
 export type AlarmDirection = "protect" | "rf" | "hybrid";
 export type MaintenanceKey = "none" | "lite" | "basis" | "uitgebreid";
+export type IndependenceMode = "off" | "manual" | "automatic";
+
+export function syncAutomaticIndependence(current: IndependenceMode, required: boolean): IndependenceMode {
+  if (required) return current === "manual" ? "manual" : "automatic";
+  return current === "automatic" ? "off" : current;
+}
 
 export const ALARM_PRICES = {
   appYearLicense: 85,

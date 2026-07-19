@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ALARM_MAINTENANCE, ALARM_PRICES, calculateAlarmConfiguration, type MaintenanceKey } from "./pricing";
+import { ALARM_MAINTENANCE, ALARM_PRICES, calculateAlarmConfiguration, syncAutomaticIndependence, type IndependenceMode, type MaintenanceKey } from "./pricing";
 import "./alarmering.css";
 
 type Reliability = 1 | 2 | 3 | 4;
@@ -23,7 +23,7 @@ export default function AlarmConfigurator() {
   const [applications, setApplications] = useState<string[]>(["BHV"]);
   const [organizationType, setOrganizationType] = useState("Kantoororganisatie");
   const [reliability, setReliability] = useState<Reliability>(2);
-  const [independentOfTelecom, setIndependentOfTelecom] = useState(false);
+  const [independenceMode, setIndependenceMode] = useState<IndependenceMode>("off");
   const [locations, setLocations] = useState(1);
   const [buildings, setBuildings] = useState(1);
   const [floors, setFloors] = useState(3);
@@ -50,6 +50,7 @@ export default function AlarmConfigurator() {
   const [quoteState, setQuoteState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [quoteMessage, setQuoteMessage] = useState("");
 
+  const independentOfTelecom = independenceMode !== "off";
   const atex = specialAreas.includes("ATEX-zone");
   const calculation = useMemo(() => calculateAlarmConfiguration({ reliability, independentOfTelecom, applications, locations, buildings, appUsers, devices, pagers, transmitters, espa, dashboard, atex, maintenance }), [reliability, independentOfTelecom, applications, locations, buildings, appUsers, devices, pagers, transmitters, espa, dashboard, atex, maintenance]);
   const advice = adviceCopy[calculation.direction];
@@ -59,11 +60,23 @@ export default function AlarmConfigurator() {
 
   const toggle = (value: string, setter: React.Dispatch<React.SetStateAction<string[]>>) => setter((current) => current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
 
+  const selectReliability = (value: Reliability) => {
+    setReliability(value);
+    setIndependenceMode((current) => syncAutomaticIndependence(current, value >= 3 || espa));
+    if (value === 4) setCoverageStudy(true);
+  };
+
+  const toggleEspa = () => {
+    const nextEspa = !espa;
+    setEspa(nextEspa);
+    setIndependenceMode((current) => syncAutomaticIndependence(current, reliability >= 3 || nextEspa));
+  };
+
   const applyPreset = (preset: "bhv" | "safety" | "fire" | "hybrid") => {
-    if (preset === "bhv") { setApplications(["BHV"]); setReliability(2); setIndependentOfTelecom(false); setAppUsers(15); setDevices(0); setPagers(0); setLocations(1); setBuildings(1); setEspa(false); setDashboard(true); }
-    if (preset === "safety") { setApplications(["Agressie", "Alleenwerkers"]); setReliability(2); setIndependentOfTelecom(false); setAppUsers(5); setDevices(10); setPagers(0); setInitiators(["Fysieke noodknop", "App"]); setEspa(false); }
-    if (preset === "fire") { setApplications(["Bedrijfsbrandweer", "Brandmeldinstallatie"]); setReliability(4); setIndependentOfTelecom(true); setAppUsers(0); setDevices(0); setPagers(20); setTransmitters(2); setEspa(true); setDashboard(true); setCoverageStudy(true); }
-    if (preset === "hybrid") { setApplications(["BHV", "Techniek", "Brandmeldinstallatie"]); setReliability(4); setIndependentOfTelecom(true); setAppUsers(10); setDevices(0); setPagers(20); setTransmitters(2); setEspa(true); setDashboard(true); setCoverageStudy(true); }
+    if (preset === "bhv") { setApplications(["BHV"]); setReliability(2); setIndependenceMode("off"); setAppUsers(15); setDevices(0); setPagers(0); setLocations(1); setBuildings(1); setEspa(false); setDashboard(true); }
+    if (preset === "safety") { setApplications(["Agressie", "Alleenwerkers"]); setReliability(2); setIndependenceMode("off"); setAppUsers(5); setDevices(10); setPagers(0); setInitiators(["Fysieke noodknop", "App"]); setEspa(false); }
+    if (preset === "fire") { setApplications(["Bedrijfsbrandweer", "Brandmeldinstallatie"]); setReliability(4); setIndependenceMode("automatic"); setAppUsers(0); setDevices(0); setPagers(20); setTransmitters(2); setEspa(true); setDashboard(true); setCoverageStudy(true); }
+    if (preset === "hybrid") { setApplications(["BHV", "Techniek", "Brandmeldinstallatie"]); setReliability(4); setIndependenceMode("automatic"); setAppUsers(10); setDevices(0); setPagers(20); setTransmitters(2); setEspa(true); setDashboard(true); setCoverageStudy(true); }
     document.getElementById("alarm-vragen")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -119,8 +132,8 @@ export default function AlarmConfigurator() {
           </Question>
 
           <Question number="02" title="Hoe kritisch is de alarmering?" subtitle="Dit is de belangrijkste keuze tussen LTE en eigen RF-infrastructuur.">
-            <div className="reliability-grid"><Choice active={reliability === 1} title="1 · Operationeel" subtitle="Tijdelijke uitval is vervelend, maar niet direct gevaarlijk" onClick={() => setReliability(1)} /><Choice active={reliability === 2} title="2 · Veiligheidskritisch" subtitle="Voor BHV, agressie en alleenwerkers" onClick={() => setReliability(2)} /><Choice active={reliability === 3} title="3 · Bedrijfskritisch" subtitle="Moet lokaal werken bij telecomuitval" onClick={() => { setReliability(3); setIndependentOfTelecom(true); }} /><Choice active={reliability === 4} title="4 · Missiekritisch" subtitle="Levensreddend of bedrijfsbrandweer" onClick={() => { setReliability(4); setIndependentOfTelecom(true); setCoverageStudy(true); }} /></div>
-            <button type="button" className={`alarm-switch ${independentOfTelecom ? "active" : ""}`} onClick={() => setIndependentOfTelecom((value) => !value)} aria-pressed={independentOfTelecom}><span>{independentOfTelecom ? "✓" : ""}</span><div><b>Blijven functioneren zonder mobiel internet of telefonie</b><small>Bij selectie wordt eigen RF-infrastructuur onderdeel van het advies.</small></div></button>
+            <div className="reliability-grid"><Choice active={reliability === 1} title="1 · Operationeel" subtitle="Tijdelijke uitval is vervelend, maar niet direct gevaarlijk" onClick={() => selectReliability(1)} /><Choice active={reliability === 2} title="2 · Veiligheidskritisch" subtitle="Voor BHV, agressie en alleenwerkers" onClick={() => selectReliability(2)} /><Choice active={reliability === 3} title="3 · Bedrijfskritisch" subtitle="Moet lokaal werken bij telecomuitval" onClick={() => selectReliability(3)} /><Choice active={reliability === 4} title="4 · Missiekritisch" subtitle="Levensreddend of bedrijfsbrandweer" onClick={() => selectReliability(4)} /></div>
+            <button type="button" className={`alarm-switch ${independentOfTelecom ? "active" : ""}`} onClick={() => setIndependenceMode((current) => current === "off" ? "manual" : "off")} aria-pressed={independentOfTelecom}><span>{independentOfTelecom ? "✓" : ""}</span><div><b>Blijven functioneren zonder mobiel internet of telefonie</b><small>Bij selectie wordt eigen RF-infrastructuur onderdeel van het advies.</small></div></button>
           </Question>
 
           <div id="alarm-bereik" />
@@ -138,7 +151,7 @@ export default function AlarmConfigurator() {
 
           <Question number="05" title="Hoe worden meldingen gestart en beheerd?" subtitle="De keuze voor ESPA, apps of dashboard kan automatisch uitgebreidere centrale hardware activeren.">
             <span className="sub-label">Melding starten via</span><div className="toggle-grid">{["App", "Fysieke noodknop", "Dashboard", "Brandmeldcentrale", "Technische installatie"].map((item) => <button type="button" key={item} className={`toggle-chip ${initiators.includes(item) ? "active" : ""}`} onClick={() => toggle(item, setInitiators)} aria-pressed={initiators.includes(item)}>{initiators.includes(item) ? "✓ " : "+ "}{item}</button>)}</div>
-            <div className="feature-grid"><Feature active={dashboard} title="Online / centraal dashboard" subtitle="Berichten starten, groepen beheren en historie bekijken" onClick={() => setDashboard((value) => !value)} /><Feature active={receptionScreen} title="Receptiescherm & narrowcasting" subtitle="BHV-aanwezigheid, instructies en actieve meldingen" onClick={() => setReceptionScreen((value) => !value)} /><Feature active={controlRoom} title="Externe meldkamer" subtitle="Opvolging volgens een afgesproken protocol" onClick={() => setControlRoom((value) => !value)} /><Feature active={espa} title="ESPA-koppeling met BMC" subtitle="Brandmeldingen automatisch als tekstbericht doorzetten" onClick={() => { setEspa((value) => !value); setIndependentOfTelecom(true); }} /></div>
+            <div className="feature-grid"><Feature active={dashboard} title="Online / centraal dashboard" subtitle="Berichten starten, groepen beheren en historie bekijken" onClick={() => setDashboard((value) => !value)} /><Feature active={receptionScreen} title="Receptiescherm & narrowcasting" subtitle="BHV-aanwezigheid, instructies en actieve meldingen" onClick={() => setReceptionScreen((value) => !value)} /><Feature active={controlRoom} title="Externe meldkamer" subtitle="Opvolging volgens een afgesproken protocol" onClick={() => setControlRoom((value) => !value)} /><Feature active={espa} title="ESPA-koppeling met BMC" subtitle="Brandmeldingen automatisch als tekstbericht doorzetten" onClick={toggleEspa} /></div>
             {espa && <label className="select-label alarm-select">Merk en type brandmeldcentrale, indien bekend<input value={bmcType} onChange={(event) => setBmcType(event.target.value)} placeholder="Bijvoorbeeld merk en type BMC" /></label>}
           </Question>
 
