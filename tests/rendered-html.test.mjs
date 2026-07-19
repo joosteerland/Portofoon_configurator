@@ -24,7 +24,7 @@ test("server-renders the professional configurator", async () => {
   assert.match(html, /Communicatie/);
   assert.match(html, /Is een ATEX-toestel nodig\?/);
   assert.match(html, /Motorola R5/);
-  assert.match(html, /3\.687,60/);
+  assert.match(html, /2\.838,00/);
   assert.match(html, /Indicatieve investering/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
 });

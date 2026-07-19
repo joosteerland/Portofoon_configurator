@@ -59,10 +59,10 @@ export default function Home() {
   const [quantity, setQuantity] = useState(8);
   const [atex, setAtex] = useState<Atex>("no");
   const [display, setDisplay] = useState<Display>("none");
-  const [environment, setEnvironment] = useState<Environment>("wet");
-  const [channels, setChannels] = useState<Channels>("3-10");
-  const [safety, setSafety] = useState<Safety>("basic");
-  const [noise, setNoise] = useState<Noise>("loud");
+  const [environment, setEnvironment] = useState<Environment>("normal");
+  const [channels, setChannels] = useState<Channels>("1-3");
+  const [safety, setSafety] = useState<Safety>("none");
+  const [noise, setNoise] = useState<Noise>("normal");
   const [band, setBand] = useState<Band>("UHF");
   const [permit, setPermit] = useState<Permit>("unknown");
   const [charger, setCharger] = useState<Charger>("single");
