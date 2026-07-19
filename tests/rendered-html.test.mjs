@@ -59,6 +59,7 @@ test("keeps product pricing and safety guardrails explicit", async () => {
 test("keeps the alarm configurator pricing and routes explicit", async () => {
   const alarm = await readFile(new URL("../app/alarmering/AlarmConfigurator.tsx", import.meta.url), "utf8");
   const pricing = await readFile(new URL("../app/alarmering/pricing.ts", import.meta.url), "utf8");
+  const alarmStyles = await readFile(new URL("../app/alarmering/alarmering.css", import.meta.url), "utf8");
   const portal = await readFile(new URL("../app/portal/ConfiguratorChoice.tsx", import.meta.url), "utf8");
   const alarmEntry = await readFile(new URL("../github-pages-src/alarmering/main.tsx", import.meta.url), "utf8");
   const communicationEntry = await readFile(new URL("../github-pages-src/communicatie/main.tsx", import.meta.url), "utf8");
@@ -80,6 +81,9 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(alarm, /image="\.\/twig-embody\.jpg"/);
   assert.match(alarm, /image="\.\/swissphone-c35\.png"/);
   assert.match(alarm, /receiver-icon-device/);
+  assert.match(alarmStyles, /alarm-product-grid img\{display:block;width:calc\(100% - 36px\);height:190px;object-fit:contain/);
+  assert.match(alarm, /https:\/\/formspree\.io\/f\/mdaqgbjj/);
+  assert.match(alarm, /Bedankt! Uw alarmeringsconfiguratie is naar Firecom verstuurd/);
   assert.match(alarm, /multiladeropstelling/);
   assert.match(alarm, /Firecom Protect/);
   assert.match(alarm, /Hybride alarmering/);
