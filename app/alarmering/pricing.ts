@@ -39,7 +39,7 @@ export function calculateAlarmConfiguration(input: AlarmCalculationInput) {
   const lteRequired = input.appUsers > 0 || input.devices > 0 || input.locations > 1;
   const direction: AlarmDirection = rfRequired && lteRequired ? "hybrid" : rfRequired ? "rf" : "protect";
   const includesRf = direction === "rf" || direction === "hybrid";
-  const transmitterCount = includesRf ? Math.max(1, input.transmitters, input.buildings > 1 ? input.buildings : 1) : 0;
+  const transmitterCount = includesRf ? Math.max(1, input.transmitters, input.locations) : 0;
   const extendedRf = includesRf && (transmitterCount >= 2 || input.espa || input.dashboard || input.buildings > 1 || direction === "hybrid");
   const rfCentral = includesRf ? (extendedRf ? ALARM_PRICES.extendedCentralEquipment : ALARM_PRICES.simpleBaseStation) : 0;
   const rfTransmitters = extendedRf ? transmitterCount * ALARM_PRICES.extendedTransmitter : 0;
