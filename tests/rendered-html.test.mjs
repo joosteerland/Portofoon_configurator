@@ -53,7 +53,7 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   assert.match(page, /LITE/);
   assert.match(page, /UITGEBREID/);
   assert.match(page, /Live totaal excl\. btw/);
-  assert.match(page, /firecom-logo-secondary\.jpg/);
+  assert.match(page, /firecom-logo-secondary\.png/);
   assert.match(layout, /Communicatie configurator/);
   assert.match(layout, /firecom-favicon-2026-32\.png/);
 });
@@ -107,9 +107,9 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(alarm, /Hybride alarmering/);
   assert.match(portal, /href="\.\/communicatie\/"/);
   assert.match(portal, /href="\.\/alarmering\/"/);
-  assert.match(portal, /firecom-logo-secondary\.jpg/);
+  assert.match(portal, /firecom-logo-secondary\.png/);
   assert.match(portal, /Firecom <b>online configurator<\/b>/);
-  assert.match(alarm, /firecom-logo-secondary\.jpg/);
+  assert.match(alarm, /firecom-logo-secondary\.png/);
   assert.match(portal, /🔊/);
   assert.match(portal, /🚨/);
   assert.match(alarmEntry, /AlarmConfigurator/);

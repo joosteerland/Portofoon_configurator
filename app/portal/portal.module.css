@@ -6,7 +6,7 @@
 .page{--navy:#062f55;--blue:#07569d;--yellow:#ffd52f;--muted:#60758a;--line:#d9e2ea;min-height:100vh;padding:0 28px 42px;overflow:hidden;background:radial-gradient(circle at 50% -20%,#fff 0,#f3f6f9 54%)}
 .header{position:relative;z-index:2;max-width:1320px;height:80px;margin:auto;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(6,47,85,.1)}
 .brand{display:flex;align-items:center;gap:15px;color:var(--navy);text-decoration:none}
-.brandLogo{display:block;width:174px;height:auto;mix-blend-mode:multiply}
+.brandLogo{display:block;width:174px;height:auto}
 .brandTitle{padding-left:15px;display:flex;flex-direction:column;border-left:1px solid rgba(6,47,85,.18);font-size:9px;font-weight:800;line-height:1.2;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
 .brandTitle b{margin-top:3px;color:var(--blue);font-size:11px}
 .help,.backLink{color:var(--muted);font-size:12px;font-weight:800;text-decoration:none}
