@@ -5,13 +5,14 @@ import { useMemo, useState } from "react";
 type Atex = "no" | "yes" | "unknown";
 type Display = "none" | "small" | "full";
 type Environment = "normal" | "wet" | "heavy";
-type Channels = "64" | "256" | "1000";
+type Channels = "1-3" | "3-10" | "10+";
 type Safety = "none" | "basic" | "advanced";
 type Noise = "normal" | "loud" | "extreme";
 type Band = "UHF" | "VHF";
 type Permit = "existing" | "help" | "unknown";
 type Charger = "none" | "single" | "multi" | "battery";
 type Battery = "standard" | "long" | "advice";
+type Maintenance = "none" | "lite" | "basis" | "uitgebreid";
 type ModelKey = "r2" | "r5nkp" | "r5lkp" | "r7fkp" | "r7premium" | "r7exnkp" | "r7exfkp";
 
 type Product = {
@@ -21,118 +22,45 @@ type Product = {
   price: number;
   label: string;
   protection: string;
-  channels: string;
   audio: string;
   battery: string;
   included: string;
   why: string;
+  image: string;
 };
 
 const products: Record<ModelKey, Product> = {
-  r2: {
-    name: "Motorola R2",
-    variant: "UHF digitaal · NKP",
-    sku: "MDH11YDC9JA2AN",
-    price: 329.75,
-    label: "Eenvoudig & betrouwbaar",
-    protection: "IP55",
-    channels: "64 kanalen",
-    audio: "101 phon",
-    battery: "tot 26,5 uur",
-    included: "Benchmarkset met 2300mAh-accu, antenne, riemclip en enkelvoudige lader.",
-    why: "De voordeligste passende keuze voor heldere spraak zonder display, locatie of uitgebreide veiligheidsfuncties.",
-  },
-  r5nkp: {
-    name: "Motorola R5",
-    variant: "NKP UHF · zonder display",
-    sku: "MDH07RDC9VA1AN",
-    price: 435.95,
-    label: "Beste balans",
-    protection: "IP67",
-    channels: "64 kanalen",
-    audio: "106 phon",
-    battery: "tot 32 uur",
-    included: "Accu en riemclip inbegrepen; lader afhankelijk van het gekozen pakket.",
-    why: "Meer audiovermogen, betere ruisonderdrukking en zwaardere bescherming voor dagelijks gebruik in lawaaiige omgevingen.",
-  },
-  r5lkp: {
-    name: "Motorola R5",
-    variant: "LKP UHF · 1,5″ display",
-    sku: "MDH07RDH9WA1AN",
-    price: 499.95,
-    label: "Compact met display",
-    protection: "IP67",
-    channels: "256 kanalen",
-    audio: "106 phon",
-    battery: "tot 32 uur",
-    included: "Radio, accu, antenne en riemclip inbegrepen; lader apart bevestigen.",
-    why: "Past wanneer statusinformatie, meer zones of 65–256 kanalen nodig zijn zonder direct naar een R7 te gaan.",
-  },
-  r7fkp: {
-    name: "Motorola R7",
-    variant: "Capable FKP UHF · kleurenscherm",
-    sku: "MDH06RDN9WA2AN",
-    price: 804.9,
-    label: "Maximale functionaliteit",
-    protection: "IP66 & IP68",
-    channels: "tot 1.000 kanalen",
-    audio: "107 phon",
-    battery: "circa 28–29 uur",
-    included: "Exacte pakketinhoud en geactiveerde licenties worden op offerte bevestigd.",
-    why: "De juiste basis voor kleurendisplay, veel kanalen, geavanceerde veiligheid, connectiviteit en complexe organisaties.",
-  },
-  r7premium: {
-    name: "Motorola R7 Premium",
-    variant: "NKP UHF · zonder display",
-    sku: "MDH06RDC9XA2AN",
-    price: 790.95,
-    label: "Premium zonder display",
-    protection: "IP66 & IP68",
-    channels: "64 kanalen",
-    audio: "107 phon",
-    battery: "circa 28–29 uur",
-    included: "2200mAh-accu, antenne en lader volgens de openbare benchmarkset.",
-    why: "Geavanceerde R7-functies en zware bescherming, met eenvoudige bediening voor vaste gespreksgroepen.",
-  },
-  r7exnkp: {
-    name: "Motorola R7Ex",
-    variant: "IIC NKP UHF · zonder display",
-    sku: "MDH57QCC9WA3AN",
-    price: 1227.15,
-    label: "ATEX · eenvoudige bediening",
-    protection: "ATEX/IECEx · IP66 & IP68",
-    channels: "uitvoeringafhankelijk",
-    audio: "108 phon",
-    battery: "tot 19–23,5 uur",
-    included: "Definitieve certificering, accu, lader en accessoires worden per ATEX-configuratie bevestigd.",
-    why: "Een afzonderlijk ontworpen explosieveilige portofoon, eenvoudig te bedienen met handschoenen en zonder display.",
-  },
-  r7exfkp: {
-    name: "Motorola R7Ex",
-    variant: "IIC FKP UHF · display & toetsenbord",
-    sku: "MDH57QCN9RA3AN",
-    price: 1563.3,
-    label: "ATEX · volledige bediening",
-    protection: "ATEX/IECEx · IP66 & IP68",
-    channels: "uitvoeringafhankelijk",
-    audio: "108 phon",
-    battery: "tot 19–23,5 uur",
-    included: "Definitieve certificering, accu, lader en accessoires worden per ATEX-configuratie bevestigd.",
-    why: "Voor explosiegevaarlijke omgevingen waar display, menu’s, statusinformatie en berichten noodzakelijk zijn.",
-  },
+  r2: { name: "Motorola R2", variant: "NKP · zonder display", sku: "MDH11YDC9JA2AN", price: 329.75, label: "Eenvoudig & betrouwbaar", protection: "IP55", audio: "101 phon", battery: "tot 26,5 uur", included: "Benchmarkset met 2300mAh-accu, antenne, riemclip en enkelvoudige lader.", why: "De voordeligste passende keuze voor heldere spraak en eenvoudige bediening.", image: "https://www.motorolasolutions.com/content/dam/msi/images/products/two-way-radios/mototrbo/portable-radios/r7-series/nile-front.png" },
+  r5nkp: { name: "Motorola R5", variant: "NKP · zonder display", sku: "MDH07RDC9VA1AN", price: 435.95, label: "Beste balans", protection: "IP67", audio: "106 phon", battery: "tot 32 uur", included: "Accu en riemclip inbegrepen; lader afhankelijk van het gekozen pakket.", why: "Sterke audio, ruisonderdrukking en zware bescherming voor intensief dagelijks gebruik.", image: "https://www.motorolasolutions.com/content/dam/msi/images/products/two-way-radios/mototrbo/portable-radios/r5/R5_lkp_front_1290x1290.webp" },
+  r5lkp: { name: "Motorola R5", variant: "LKP · 1,5″ display", sku: "MDH07RDH9WA1AN", price: 499.95, label: "Compact met display", protection: "IP67", audio: "106 phon", battery: "tot 32 uur", included: "Radio, accu, antenne en riemclip inbegrepen; lader apart bevestigen.", why: "Past wanneer statusinformatie of meerdere gespreksgroepen overzichtelijk zichtbaar moeten zijn.", image: "https://www.motorolasolutions.com/content/dam/msi/images/products/two-way-radios/mototrbo/portable-radios/r5/R5_lkp_front_1290x1290.webp" },
+  r7fkp: { name: "Motorola R7", variant: "Capable FKP · kleurenscherm", sku: "MDH06RDN9WA2AN", price: 804.9, label: "Maximale functionaliteit", protection: "IP66 & IP68", audio: "107 phon", battery: "circa 28–29 uur", included: "Exacte pakketinhoud en geactiveerde licenties worden op offerte bevestigd.", why: "Voor kleurendisplay, geavanceerde veiligheid, connectiviteit en complexe organisaties.", image: "https://www.motorolasolutions.com/content/dam/msi/images/products/two-way-radios/mototrbo/portable-radios/r7-series/mototrbo_r7_fkp_redner_front.png" },
+  r7premium: { name: "Motorola R7 Premium", variant: "NKP · zonder display", sku: "MDH06RDC9XA2AN", price: 790.95, label: "Premium zonder display", protection: "IP66 & IP68", audio: "107 phon", battery: "circa 28–29 uur", included: "2200mAh-accu, antenne en lader volgens de openbare benchmarkset.", why: "Geavanceerde R7-functies en zware bescherming met eenvoudige bediening.", image: "https://www.motorolasolutions.com/content/dam/msi/images/products/two-way-radios/mototrbo/portable-radios/r7-series/mototrbo_r7_fkp_redner_front.png" },
+  r7exnkp: { name: "Motorola R7Ex", variant: "IIC NKP · zonder display", sku: "MDH57QCC9WA3AN", price: 1227.15, label: "ATEX · eenvoudige bediening", protection: "ATEX/IECEx · IP66 & IP68", audio: "108 phon", battery: "tot 19–23,5 uur", included: "Gecertificeerde accu, lader en accessoires worden op de definitieve offerte bevestigd.", why: "De explosieveilige R7Ex-productfamilie met eenvoudige bediening en zonder display.", image: "https://www.motorolasolutions.com/content/dam/msi/images/products/two-way-radios/mototrbo/portable-radios/r7ex/MOTOTRBO_R7Ex_FKP_front_1290x1290.webp" },
+  r7exfkp: { name: "Motorola R7Ex", variant: "IIC FKP · display & toetsenbord", sku: "MDH57QCN9RA3AN", price: 1563.3, label: "ATEX · volledige bediening", protection: "ATEX/IECEx · IP66 & IP68", audio: "108 phon", battery: "tot 19–23,5 uur", included: "Gecertificeerde accu, lader en accessoires worden op de definitieve offerte bevestigd.", why: "Dezelfde explosieveilige R7Ex-productfamilie, met display en volledige bediening.", image: "https://www.motorolasolutions.com/content/dam/msi/images/products/two-way-radios/mototrbo/portable-radios/r7ex/MOTOTRBO_R7Ex_FKP_front_1290x1290.webp" },
+};
+
+const maintenancePlans: Record<Maintenance, { name: string; price: number; response: string; summary: string[] }> = {
+  none: { name: "Geen contract", price: 0, response: "Reguliere planning", summary: ["Onderhoud op nacalculatie", "€ 105 per uur"] },
+  lite: { name: "LITE", price: 1000, response: "Binnen 24 kantooruren", summary: ["Voorrang in de planning", "Calamiteitenvoorraad", "€ 105 per onderhoudsuur"] },
+  basis: { name: "BASIS", price: 1500, response: "Binnen 4 uur", summary: ["Hogere prioriteit", "Calamiteitenvoorraad", "Avond- en weekendservice"] },
+  uitgebreid: { name: "UITGEBREID", price: 2000, response: "Binnen 2 uur", summary: ["Hoogste prioriteit", "Calamiteitenvoorraad", "24/7 dienstverlening"] },
 };
 
 const QUOTE_FORM_URL = "https://formspree.io/f/mdaqgbjj";
-
-const euro = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", minimumFractionDigits: 2 });
+const PROGRAMMING_PRICE = 25;
 const SLR5500_PACKAGE_PRICE = 5500;
+const REPEATER_INSTALLATION_PRICE = 950;
+const RDI_ONE_TIME = 219;
+const RDI_ANNUAL_RADIOS = 83;
+const RDI_ANNUAL_REPEATER = 507;
+const euro = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", minimumFractionDigits: 2 });
 
 export default function Home() {
   const [quantity, setQuantity] = useState(8);
   const [atex, setAtex] = useState<Atex>("no");
   const [display, setDisplay] = useState<Display>("none");
   const [environment, setEnvironment] = useState<Environment>("wet");
-  const [channels, setChannels] = useState<Channels>("64");
+  const [channels, setChannels] = useState<Channels>("3-10");
   const [safety, setSafety] = useState<Safety>("basic");
   const [noise, setNoise] = useState<Noise>("loud");
   const [band, setBand] = useState<Band>("UHF");
@@ -141,13 +69,8 @@ export default function Home() {
   const [battery, setBattery] = useState<Battery>("standard");
   const [extensions, setExtensions] = useState<string[]>([]);
   const [repeater, setRepeater] = useState(false);
-  const [atexHazard, setAtexHazard] = useState("gas-en-stof");
-  const [atexZone, setAtexZone] = useState("onbekend");
-  const [atexGroup, setAtexGroup] = useState("IIC");
-  const [temperatureClass, setTemperatureClass] = useState("onbekend");
-  const [repeaterMount, setRepeaterMount] = useState("wand");
-  const [backupPower, setBackupPower] = useState("ja");
   const [siteConnect, setSiteConnect] = useState("nee");
+  const [maintenance, setMaintenance] = useState<Maintenance>("none");
   const [companyName, setCompanyName] = useState("");
   const [contactName, setContactName] = useState("");
   const [email, setEmail] = useState("");
@@ -157,329 +80,151 @@ export default function Home() {
 
   const recommendation = useMemo(() => {
     let key: ModelKey;
-    if (atex === "yes") {
-      key = display === "none" ? "r7exnkp" : "r7exfkp";
-    } else if (display === "full" || channels === "1000") {
-      key = "r7fkp";
-    } else if (environment === "heavy" || safety === "advanced" || noise === "extreme" || extensions.length > 1) {
-      key = display === "none" ? "r7premium" : "r7fkp";
-    } else if (display === "small" || channels === "256") {
-      key = "r5lkp";
-    } else if (environment === "wet" || safety === "basic" || noise === "loud") {
-      key = "r5nkp";
-    } else {
-      key = "r2";
-    }
+    if (atex === "yes") key = display === "none" ? "r7exnkp" : "r7exfkp";
+    else if (display === "full") key = "r7fkp";
+    else if (environment === "heavy" || safety === "advanced" || noise === "extreme" || extensions.length > 1) key = display === "none" ? "r7premium" : "r7fkp";
+    else if (display === "small") key = "r5lkp";
+    else if (environment === "wet" || safety === "basic" || noise === "loud") key = "r5nkp";
+    else key = "r2";
     const product = products[key];
     return { key, product, subtotal: product.price * quantity };
-  }, [atex, display, environment, channels, safety, noise, extensions, quantity]);
+  }, [atex, display, environment, safety, noise, extensions, quantity]);
 
-  const quoteItems = [
-    charger !== "none" && !(recommendation.key === "r2" && charger === "single") ? "gekozen laadoplossing" : null,
-    battery !== "standard" ? "accu en bijbehorende technische waarden" : null,
-    extensions.length ? "softwarefuncties en licenties" : null,
-    permit !== "existing" ? "frequentievergunning of begeleiding" : null,
-    repeater && siteConnect === "ja" ? "IP Site Connect-activering en netwerkconfiguratie" : null,
-    atex === "yes" ? "exacte ATEX/IECEx-classificatie en gecertificeerde accessoires" : null,
-    atex === "unknown" ? "ATEX-beoordeling door een specialist" : null,
-  ].filter(Boolean) as string[];
+  const programmingTotal = quantity * PROGRAMMING_PRICE;
+  const repeaterTotal = repeater ? SLR5500_PACKAGE_PRICE + REPEATER_INSTALLATION_PRICE : 0;
+  const systemTotal = recommendation.subtotal + programmingTotal + repeaterTotal;
+  const annualRdi = repeater ? RDI_ANNUAL_REPEATER : RDI_ANNUAL_RADIOS;
+  const plan = maintenancePlans[maintenance];
 
-  const systemTotal = recommendation.subtotal + (repeater ? SLR5500_PACKAGE_PRICE : 0);
-
-  const toggleExtension = (value: string) => {
-    setExtensions((current) => current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
+  const applyPreset = (preset: "simple" | "logistics" | "industrial" | "atex") => {
+    if (preset === "simple") { setAtex("no"); setDisplay("none"); setEnvironment("normal"); setNoise("normal"); setSafety("none"); setChannels("1-3"); setRepeater(false); }
+    if (preset === "logistics") { setAtex("no"); setDisplay("small"); setEnvironment("wet"); setNoise("loud"); setSafety("basic"); setChannels("3-10"); }
+    if (preset === "industrial") { setAtex("no"); setDisplay("none"); setEnvironment("heavy"); setNoise("extreme"); setSafety("advanced"); setChannels("10+"); }
+    if (preset === "atex") { setAtex("yes"); setDisplay("none"); setEnvironment("heavy"); setNoise("extreme"); setSafety("advanced"); setChannels("3-10"); }
+    document.getElementById("vragen")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const requestQuote = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setQuoteState("sending");
-    setQuoteMessage("");
+  const toggleExtension = (value: string) => setExtensions((current) => current.includes(value) ? current.filter((item) => item !== value) : [...current, value]);
 
+  const requestQuote = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); setQuoteState("sending"); setQuoteMessage("");
     try {
       const configuration = [
-        `Model: ${recommendation.product.name}`,
-        `Uitvoering: ${recommendation.product.variant}`,
-        `SKU: ${recommendation.product.sku}`,
-        `Aantal portofoons: ${quantity}`,
-        `Stuksprijs excl. btw: ${euro.format(recommendation.product.price)}`,
-        `Subtotaal portofoons excl. btw: ${euro.format(recommendation.subtotal)}`,
-        `Indicatief systeemtotaal excl. btw: ${euro.format(systemTotal)}`,
-        `ATEX: ${atex}`,
-        `ATEX-risico: ${atexHazard}`,
-        `ATEX-zone: ${atexZone}`,
-        `Gasgroep: ${atexGroup}`,
-        `Temperatuurklasse: ${temperatureClass}`,
-        `Display: ${display}`,
-        `Werkomgeving: ${environment}`,
-        `Kanalen: ${channels}`,
-        `Veiligheid: ${safety}`,
-        `Geluidsniveau: ${noise}`,
-        `Frequentieband: ${band}`,
-        `Vergunning: ${permit}`,
-        `Lader: ${charger}`,
-        `Accu: ${battery}`,
-        `Uitbreidingen: ${extensions.length ? extensions.join(", ") : "Geen"}`,
-        `SLR5500-pakket: ${repeater ? "Ja" : "Nee"}`,
-        `Repeatermontage: ${repeaterMount}`,
-        `Noodstroom: ${backupPower}`,
-        `IP Site Connect: ${siteConnect}`,
-        `Nog te offreren: ${quoteItems.length ? quoteItems.join(", ") : "Geen"}`,
+        `Communicatie configurator`, `Model: ${recommendation.product.name}`, `Uitvoering: ${recommendation.product.variant}`, `SKU: ${recommendation.product.sku}`,
+        `Aantal portofoons: ${quantity}`, `Stuksprijs excl. btw: ${euro.format(recommendation.product.price)}`, `Portofoons: ${euro.format(recommendation.subtotal)}`,
+        `Programmering (${quantity} × ${euro.format(PROGRAMMING_PRICE)}): ${euro.format(programmingTotal)}`, `Indicatief systeemtotaal excl. btw: ${euro.format(systemTotal)}`,
+        `ATEX: ${atex}`, `Display: ${display}`, `Werkomgeving: ${environment}`, `Aantal gespreksgroepen: ${channels}`, `Veiligheid: ${safety}`, `Geluidsniveau: ${noise}`,
+        `Frequentieband: ${band}`, `Vergunning: ${permit}`, `RDI-indicatie indien nodig: ${euro.format(RDI_ONE_TIME)} eenmalig + ${euro.format(annualRdi)} per jaar`,
+        `Lader: ${charger}`, `Accu: ${battery}`, `Uitbreidingen: ${extensions.length ? extensions.join(", ") : "Geen"}`,
+        `SLR5500-pakket: ${repeater ? `Ja, ${euro.format(SLR5500_PACKAGE_PRICE)} + plaatsing ${euro.format(REPEATER_INSTALLATION_PRICE)}` : "Nee"}`, `IP Site Connect: ${siteConnect}`,
+        `Onderhoud: ${plan.name} · ${euro.format(plan.price)} per jaar · ${plan.response}`,
       ].join("\n");
-
-      const response = await fetch(QUOTE_FORM_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          _subject: `Offerteaanvraag configurator · ${companyName} · ${quantity}× ${recommendation.product.name}`,
-          _replyto: email,
-          _gotcha: website,
-          bedrijfsnaam: companyName,
-          naam: contactName,
-          email,
-          configuratie: configuration,
-        }),
-      });
+      const response = await fetch(QUOTE_FORM_URL, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ _subject: `Offerteaanvraag Communicatie configurator · ${companyName}`, _replyto: email, _gotcha: website, bedrijfsnaam: companyName, naam: contactName, email, configuratie: configuration }) });
       const result = await response.json().catch(() => ({})) as { error?: string };
       if (!response.ok) throw new Error(result.error || "De aanvraag kon niet worden verzonden.");
-      setQuoteState("sent");
-      setQuoteMessage("Bedankt! Je configuratie is naar Firecom verstuurd. Een specialist neemt contact met je op.");
-    } catch (error) {
-      setQuoteState("error");
-      setQuoteMessage(error instanceof Error ? error.message : "De aanvraag kon niet worden verzonden.");
-    }
+      setQuoteState("sent"); setQuoteMessage("Bedankt! Je configuratie is naar Firecom verstuurd. Een specialist neemt contact met je op.");
+    } catch (error) { setQuoteState("error"); setQuoteMessage(error instanceof Error ? error.message : "De aanvraag kon niet worden verzonden."); }
   };
 
   return (
     <main>
       <header className="site-header">
-        <a className="brand" href="#configurator" aria-label="PortofoonPrijs configurator">
-          <span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
-          <span>PORTOFOON<span>PRIJS</span></span>
-        </a>
-        <span className="header-note">Prijsbenchmark · 19 juli 2026 · excl. btw</span>
+        <a className="brand" href="#configurator" aria-label="Communicatie configurator"><span className="brand-mark" aria-hidden="true"><i /><i /><i /></span><span>COMMUNICATIE <em>CONFIGURATOR</em></span></a>
+        <a className="header-cta" href="#offerte">Vraag offerte aan</a>
       </header>
 
       <section className="hero" aria-labelledby="page-title">
-        <div className="eyebrow"><span /> Professionele Motorola-keuzehulp</div>
-        <h1 id="page-title">Configureer de juiste<br /><em>portofoonoplossing.</em></h1>
-        <p>Van eenvoudige R2 tot explosieveilige R7Ex. Beantwoord de technische vragen en ontvang direct een onderbouwd modeladvies met actuele openbare vanafprijs.</p>
-        <div className="trust-row">
-          <span>Exacte Motorola-uitvoering</span><span>Onmogelijke keuzes geblokkeerd</span><span>Transparante vanafprijzen</span>
+        <div className="eyebrow"><span /> Firecom keuzehulp</div>
+        <h1 id="page-title">Communicatie<br /><em>configurator</em></h1>
+        <p>Stel stap voor stap een professionele portofoonoplossing samen. Je ziet direct een indicatieve prijs en ontvangt daarna een passende offerte van Firecom.</p>
+        <div className="trust-row"><span>Alle prijzen excl. btw</span><span>Programmering inbegrepen</span><span>Direct een helder advies</span></div>
+      </section>
+
+      <nav className="step-nav" aria-label="Stappen"><a href="#start">1. Start</a><a href="#vragen">2. Toestellen</a><a href="#bereik">3. Bereik</a><a href="#onderhoud">4. Onderhoud</a><a href="#offerte">5. Offerte</a></nav>
+
+      <section className="quick-start" id="start" aria-labelledby="quick-title">
+        <div className="section-intro"><span className="step-kicker">Snel beginnen</span><h2 id="quick-title">Welke situatie past het beste?</h2><p>Kies een uitgangspunt of stel alles zelf samen. Je kunt iedere keuze daarna aanpassen.</p></div>
+        <div className="preset-grid">
+          <Preset icon="↔" title="Eenvoudige communicatie" text="Vaste groepen, rustige omgeving" action={() => applyPreset("simple")} />
+          <Preset icon="▦" title="Magazijn & logistiek" text="Lawaai, water en statusweergave" action={() => applyPreset("logistics")} />
+          <Preset icon="⚙" title="Industrie" text="Zware omstandigheden en veiligheid" action={() => applyPreset("industrial")} />
+          <Preset icon="ATEX" title="Explosiegevaar" text="Eén R7Ex-productfamilie" action={() => applyPreset("atex")} featured />
         </div>
       </section>
 
-      <section className="configurator-shell" id="configurator" aria-label="Motorola portofoonconfigurator">
-        <div className="questions-panel">
-          <div className="panel-heading">
-            <div><span className="step-kicker">Jouw toepassing</span><h2>Bouw de passende configuratie</h2></div>
-            <span className="progress-label">Technische voorselectie</span>
-          </div>
+      <section className="configurator-shell" id="configurator" aria-label="Communicatie configurator">
+        <div className="questions-panel" id="vragen">
+          <div className="panel-heading"><div><span className="step-kicker">Toestelkeuze</span><h2>Vertel ons wat je nodig hebt</h2></div><span className="progress-label">Live berekening</span></div>
 
-          <Question number="01" title="Is ATEX of IECEx verplicht?" subtitle="Explosiegevaar bepaalt de productfamilie en alle toegestane accessoires.">
-            <div className="choice-grid three">
-              <Choice active={atex === "no"} title="Nee" subtitle="Geen explosiegevaar" onClick={() => setAtex("no")} />
-              <Choice active={atex === "yes"} title="Ja" subtitle="Gas, stof of beide" onClick={() => { setAtex("yes"); setBand("UHF"); setEnvironment("heavy"); setChannels("64"); setDisplay((current) => current === "small" ? "full" : current); }} />
-              <Choice active={atex === "unknown"} title="Weet ik niet" subtitle="Technische beoordeling nodig" onClick={() => setAtex("unknown")} />
-            </div>
-            {atex === "yes" && (
-              <div className="conditional-card warning-card">
-                <div className="conditional-title"><b>ATEX-specificatie</b><span>Verplicht voor een veilige offerte</span></div>
-                <div className="select-grid">
-                  <label>Risico<select value={atexHazard} onChange={(e) => setAtexHazard(e.target.value)}><option value="gas">Gas</option><option value="stof">Stof</option><option value="gas-en-stof">Gas en stof</option></select></label>
-                  <label>Zone<select value={atexZone} onChange={(e) => setAtexZone(e.target.value)}><option value="onbekend">Nog vaststellen</option><option>Zone 0 / 20</option><option>Zone 1 / 21</option><option>Zone 2 / 22</option></select></label>
-                  <label>Gasgroep<select value={atexGroup} onChange={(e) => setAtexGroup(e.target.value)}><option>IIA</option><option>IIB</option><option>IIC</option><option value="onbekend">Nog vaststellen</option></select></label>
-                  <label>Temperatuurklasse<select value={temperatureClass} onChange={(e) => setTemperatureClass(e.target.value)}><option value="onbekend">Nog vaststellen</option><option>T1</option><option>T2</option><option>T3</option><option>T4</option></select></label>
-                </div>
-                <p>Alleen goedgekeurde R7Ex-accu’s, laders, microfoons en headsets worden toegestaan. Standaard R7-accessoires zijn niet uitwisselbaar.</p>
-              </div>
-            )}
-            {atex === "unknown" && <div className="inline-alert">Laat de zone en stof-/gasclassificatie eerst beoordelen. Het onderstaande advies is voorlopig en geen veilige ATEX-selectie.</div>}
+          <Question number="01" title="Is een ATEX-toestel nodig?" subtitle="Bij explosiegevaar adviseren we de Motorola R7Ex-productfamilie.">
+            <div className="choice-grid three"><Choice active={atex === "no"} title="Nee" subtitle="Geen explosiegevaar" onClick={() => setAtex("no")} /><Choice active={atex === "yes"} title="Ja" subtitle="Motorola R7Ex" onClick={() => { setAtex("yes"); setEnvironment("heavy"); }} /><Choice active={atex === "unknown"} title="Weet ik niet" subtitle="Firecom controleert dit" onClick={() => setAtex("unknown")} /></div>
+            {atex === "yes" && <div className="inline-alert">Er is één ATEX-productfamilie: de Motorola R7Ex. Je kiest alleen nog de bediening met of zonder display; verdere certificering controleert Firecom in de offerte.</div>}
           </Question>
 
-          <Question number="02" title="Welke bediening is nodig?" subtitle="Display en toetsenbord bepalen de frontvariant en kanaalcapaciteit.">
-            <div className="choice-grid three">
-              <Choice active={display === "none"} title="Geen display" subtitle="Vaste groepen, eenvoudige bediening" onClick={() => setDisplay("none")} />
-              <Choice active={display === "small"} title="Kleine statusweergave" subtitle="R5 Limited Keypad, maximaal 256 kanalen" onClick={() => setDisplay("small")} disabled={atex === "yes"} />
-              <Choice active={display === "full"} title="Kleurenscherm" subtitle="Volledige bediening en berichten" onClick={() => setDisplay("full")} />
-            </div>
+          <Question number="02" title="Welke bediening past bij de gebruikers?" subtitle="Een display is handig voor status, menu’s en meerdere gespreksgroepen.">
+            <div className="choice-grid three"><Choice active={display === "none"} title="Zonder display" subtitle="Snel en eenvoudig" onClick={() => setDisplay("none")} /><Choice active={display === "small"} title="Klein display" subtitle="Compacte statusweergave" onClick={() => setDisplay("small")} disabled={atex === "yes"} /><Choice active={display === "full"} title="Volledig display" subtitle="Menu’s en berichten" onClick={() => setDisplay("full")} /></div>
           </Question>
 
-          <Question number="03" title="Hoe zwaar is de werkomgeving?" subtitle="Kies op basis van water, stof en mechanische belasting.">
-            <div className="choice-grid three">
-              <Choice active={environment === "normal"} title="Normaal · IP55" subtitle="Stof en incidentele regen" onClick={() => setEnvironment("normal")} disabled={atex === "yes"} />
-              <Choice active={environment === "wet"} title="Zwaar · IP67" subtitle="Stofdicht en tijdelijk onderdompelbaar" onClick={() => setEnvironment("wet")} disabled={atex === "yes"} />
-              <Choice active={environment === "heavy"} title="Extreem · IP68" subtitle="Hogedrukwater en onderdompeling" onClick={() => setEnvironment("heavy")} />
-            </div>
+          <Question number="03" title="Hoe wordt de portofoon gebruikt?" subtitle="Water, stof, geluid en veiligheidsfuncties bepalen de juiste serie.">
+            <div className="split-questions"><div><span className="sub-label">Werkomgeving</span><div className="choice-stack"><Choice active={environment === "normal"} title="Normaal" subtitle="Binnen, droog en licht gebruik" onClick={() => setEnvironment("normal")} disabled={atex === "yes"} /><Choice active={environment === "wet"} title="Zwaar" subtitle="Stof, regen en intensief gebruik" onClick={() => setEnvironment("wet")} disabled={atex === "yes"} /><Choice active={environment === "heavy"} title="Extreem" subtitle="Industrieel en maximale bescherming" onClick={() => setEnvironment("heavy")} /></div></div><div><span className="sub-label">Omgevingsgeluid</span><div className="choice-stack"><Choice active={noise === "normal"} title="Normaal" subtitle="Kantoor, retail of evenement" onClick={() => setNoise("normal")} /><Choice active={noise === "loud"} title="Lawaaiig" subtitle="Magazijn of productie" onClick={() => setNoise("loud")} /><Choice active={noise === "extreme"} title="Zeer lawaaiig" subtitle="Machines en zware industrie" onClick={() => setNoise("extreme")} /></div></div></div>
           </Question>
 
-          <Question number="04" title="Hoeveel kanalen en groepen zijn nodig?" subtitle="Meer kanalen vragen om een displaymodel.">
-            <div className="choice-grid three">
-              <Choice active={channels === "64"} title="Tot 64" subtitle="Alle modellen mogelijk" onClick={() => setChannels("64")} />
-              <Choice active={channels === "256"} title="65–256" subtitle="Minimaal R5 LKP" onClick={() => { setChannels("256"); if (display === "none") setDisplay("small"); }} disabled={atex === "yes"} />
-              <Choice active={channels === "1000"} title="257–1.000" subtitle="R7 FKP met kleurenscherm" onClick={() => { setChannels("1000"); setDisplay("full"); }} disabled={atex === "yes"} />
-            </div>
+          <Question number="04" title="Hoeveel gespreksgroepen en veiligheid zijn nodig?" subtitle="Alle toestellen zijn leverbaar in VHF en UHF; het exacte kanaalplan maakt Firecom.">
+            <div className="split-questions"><div><span className="sub-label">Gespreksgroepen</span><div className="choice-stack"><Choice active={channels === "1-3"} title="1–3" subtitle="Kleine organisatie" onClick={() => setChannels("1-3")} /><Choice active={channels === "3-10"} title="3–10" subtitle="Meerdere teams of afdelingen" onClick={() => setChannels("3-10")} /><Choice active={channels === "10+"} title="10 of meer" subtitle="Uitgebreide organisatie" onClick={() => setChannels("10+")} /></div></div><div><span className="sub-label">Veiligheidsfuncties</span><div className="choice-stack"><Choice active={safety === "none"} title="Geen" subtitle="Alleen spraak" onClick={() => setSafety("none")} /><Choice active={safety === "basic"} title="Basis" subtitle="Noodknop of lone worker" onClick={() => setSafety("basic")} /><Choice active={safety === "advanced"} title="Geavanceerd" subtitle="GNSS, man-down en beheer" onClick={() => setSafety("advanced")} /></div></div></div>
+            <span className="sub-label extension-label">Gewenste uitbreidingen · apart te offreren</span><div className="toggle-grid">{["Bluetooth / Wi‑Fi", "GNSS / GPS", "Man-down", "Capacity Plus", "AES-256", "WAVE PTX"].map((item) => <button type="button" key={item} className={`toggle-chip ${extensions.includes(item) ? "active" : ""}`} onClick={() => toggleExtension(item)} aria-pressed={extensions.includes(item)}>{extensions.includes(item) ? "✓ " : "+ "}{item}</button>)}</div>
           </Question>
 
-          <Question number="05" title="Wat vragen veiligheid en geluidsniveau?" subtitle="Audio, sensoren en locatie kunnen een zwaarder model noodzakelijk maken.">
-            <div className="split-questions">
-              <div><span className="sub-label">Veiligheidsfuncties</span><div className="choice-stack">
-                <Choice active={safety === "none"} title="Geen" subtitle="Alleen spraakcommunicatie" onClick={() => setSafety("none")} />
-                <Choice active={safety === "basic"} title="Basis" subtitle="Noodknop of lone worker" onClick={() => setSafety("basic")} />
-                <Choice active={safety === "advanced"} title="Geavanceerd" subtitle="GNSS, man-down, sensoren en beheer" onClick={() => setSafety("advanced")} />
-              </div></div>
-              <div><span className="sub-label">Omgevingsgeluid</span><div className="choice-stack">
-                <Choice active={noise === "normal"} title="Normaal" subtitle="Kantoor, retail, evenementen" onClick={() => setNoise("normal")} />
-                <Choice active={noise === "loud"} title="Lawaaiig" subtitle="Magazijn of productie" onClick={() => setNoise("loud")} />
-                <Choice active={noise === "extreme"} title="Zeer lawaaiig" subtitle="Industrie en zware machines" onClick={() => setNoise("extreme")} />
-              </div></div>
-            </div>
-            <span className="sub-label extension-label">Gewenste uitbreidingen · afzonderlijk geprijsd</span>
-            <div className="toggle-grid">
-              {["Bluetooth / Wi‑Fi", "GNSS / GPS", "Man-down", "Capacity Plus", "AES-256", "WAVE PTX"].map((item) => (
-                <button type="button" key={item} className={`toggle-chip ${extensions.includes(item) ? "active" : ""}`} onClick={() => toggleExtension(item)} aria-pressed={extensions.includes(item)}>{extensions.includes(item) ? "✓ " : "+ "}{item}</button>
-              ))}
-            </div>
+          <Question number="05" title="Frequentie, aantal en laden" subtitle="VHF en UHF zijn voor alle toestelseries beschikbaar. Firecom adviseert wat het beste past.">
+            <div className="option-row"><div><span className="sub-label">Frequentieband</span><div className="choice-grid two"><Choice active={band === "UHF"} title="UHF" subtitle="Vaak in en rond gebouwen" onClick={() => setBand("UHF")} /><Choice active={band === "VHF"} title="VHF" subtitle="Vaak op open terrein" onClick={() => setBand("VHF")} /></div></div><div><label className="select-label">Accu<select value={battery} onChange={(e) => setBattery(e.target.value as Battery)}><option value="standard">Standaard pakketaccu</option><option value="long">Langere gebruiksduur</option><option value="advice">Laat adviseren</option></select></label><label className="select-label">Lader<select value={charger} onChange={(e) => setCharger(e.target.value as Charger)}><option value="none">Geen lader</option><option value="single">Enkelvoudige lader</option><option value="multi">Zesvoudige multilader</option><option value="battery">Reserve-/acculader</option></select></label></div></div>
+            <div className="quantity-row"><label htmlFor="quantity">Aantal portofoons</label><div className="quantity-control"><button type="button" onClick={() => setQuantity((v) => Math.max(1, v - 1))}>−</button><output><strong>{quantity}</strong><span>stuks</span></output><button type="button" onClick={() => setQuantity((v) => Math.min(250, v + 1))}>+</button></div><input id="quantity" className="range" type="range" min="1" max="250" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></div>
+            <div className="cost-note"><b>Programmering direct meegerekend</b><span>{quantity} × {euro.format(PROGRAMMING_PRICE)} = {euro.format(programmingTotal)} excl. btw</span></div>
           </Question>
 
-          <Question number="06" title="Frequentie, vergunning en aantal" subtitle="Professionele UHF/VHF-uitvoeringen zijn in Nederland vergunningsplichtig.">
-            <div className="split-questions">
-              <div><span className="sub-label">Frequentieband</span><div className="choice-grid two">
-                <Choice active={band === "UHF"} title="UHF" subtitle="Veel gebruikt in gebouwen" onClick={() => setBand("UHF")} />
-                <Choice active={band === "VHF"} title="VHF" subtitle="Vaak geschikt voor open terrein" onClick={() => setBand("VHF")} disabled={atex === "yes"} />
-              </div></div>
-              <div><span className="sub-label">Vergunning</span><div className="choice-stack compact">
-                <Choice active={permit === "existing"} title="Al aanwezig" subtitle="Frequenties bekend" onClick={() => setPermit("existing")} />
-                <Choice active={permit === "help"} title="Hulp gewenst" subtitle="Begeleiding apart offreren" onClick={() => setPermit("help")} />
-                <Choice active={permit === "unknown"} title="Weet ik niet" subtitle="Eerst inventariseren" onClick={() => setPermit("unknown")} />
-              </div></div>
-            </div>
-            <div className="quantity-row">
-              <label htmlFor="quantity">Aantal portofoons</label>
-              <div className="quantity-control"><button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Eén portofoon minder">−</button><output><strong>{quantity}</strong><span>stuks</span></output><button type="button" onClick={() => setQuantity((value) => Math.min(250, value + 1))} aria-label="Eén portofoon meer">+</button></div>
-              <input id="quantity" className="range" type="range" min="1" max="250" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} />
-            </div>
+          <div id="bereik" />
+          <Question number="06" title="Is een repeater nodig voor extra bereik?" subtitle="De SLR5500 krijgt een prominente plek en wordt bij selectie direct volledig meegerekend.">
+            <div className="repeater-choice-grid"><button type="button" className={`repeater-option ${!repeater ? "active" : ""}`} onClick={() => setRepeater(false)}><span className="repeater-symbol no-repeater">↔</span><span><b>Zonder repeater</b><small>Directe verbinding tussen portofoons</small></span><strong>Geen meerprijs</strong></button><button type="button" className={`repeater-option featured ${repeater ? "active" : ""}`} onClick={() => setRepeater(true)}><span className="recommended-badge">Compleet geleverd</span><img src="https://www.motorolasolutions.com/content/dam/msi/images/products/mototrbo/slr5000-series/product-slr5000-front-angle-abaco-darrell-ryan-0609.jpg" alt="Motorola SLR5500 repeater" /><span><b>Motorola SLR5500</b><small>Noodstroom, antenne en plaatsing inbegrepen</small></span><strong>+ {euro.format(SLR5500_PACKAGE_PRICE + REPEATER_INSTALLATION_PRICE)}</strong></button></div>
+            {repeater && <div className="repeater-package"><h3>Complete repeateroplossing</h3><div className="package-includes"><span>SLR5500-repeater</span><span>Antenne & kabel</span><span>Duplexfilter</span><span>Noodstroom</span><span>Programmering</span><span>Plaatsing</span><span>Inbedrijfstelling</span><span>Dekkingsmeting</span></div><div className="price-lines"><span><b>Repeaterpakket</b><strong>{euro.format(SLR5500_PACKAGE_PRICE)}</strong></span><span><b>Plaatsing, indicatief</b><strong>{euro.format(REPEATER_INSTALLATION_PRICE)}</strong></span></div><label className="select-label">Meerdere locaties koppelen<select value={siteConnect} onChange={(e) => setSiteConnect(e.target.value)}><option value="nee">Nee</option><option value="ja">Ja, IP Site Connect</option><option value="advice">Laat adviseren</option></select></label><p>Locatieafhankelijke bouwkundige werkzaamheden en aanvullende netwerklicenties kunnen de definitieve offerte wijzigen.</p></div>}
           </Question>
 
-          <Question number="07" title="Is bereikuitbreiding met een SLR5500 nodig?" subtitle="De repeater krijgt een eigen systeemprijs en wordt direct bij het live totaal opgeteld.">
-            <div className="repeater-choice-grid">
-              <button type="button" className={`repeater-option ${!repeater ? "active" : ""}`} onClick={() => setRepeater(false)} aria-pressed={!repeater}>
-                <span className="repeater-symbol no-repeater" aria-hidden="true">↔</span>
-                <span><b>Zonder repeater</b><small>Direct bereik tussen de portofoons</small></span>
-                <strong>Geen meerprijs</strong>
-              </button>
-              <button type="button" className={`repeater-option featured ${repeater ? "active" : ""}`} onClick={() => setRepeater(true)} aria-pressed={repeater}>
-                <span className="recommended-badge">Bereikuitbreiding</span>
-                <span className="repeater-symbol" aria-hidden="true">SLR</span>
-                <span><b>Compleet SLR5500-pakket</b><small>Repeater, RF-infrastructuur, montage en dekkingsmeting</small></span>
-                <strong>+ {euro.format(SLR5500_PACKAGE_PRICE)}</strong>
-              </button>
-            </div>
-            {repeater && (
-              <div className="conditional-card repeater-details">
-                <div className="conditional-title"><b>SLR5500-infrastructuur</b><span>Direct meegerekend</span></div>
-                <div className="package-includes"><span>SLR5500-repeater</span><span>Antenne & kabel</span><span>Duplexfilter</span><span>Voeding</span><span>Programmering</span><span>Montage</span><span>Inbedrijfstelling</span><span>Dekkingsmeting</span></div>
-                <div className="select-grid three-cols">
-                  <label>Montage<select value={repeaterMount} onChange={(e) => setRepeaterMount(e.target.value)}><option value="wand">Wandbehuizing</option><option value="rack">Rackbehuizing</option><option value="advice">Laat adviseren</option></select></label>
-                  <label>Noodstroom<select value={backupPower} onChange={(e) => setBackupPower(e.target.value)}><option value="ja">Ja</option><option value="nee">Nee</option><option value="advice">Laat adviseren</option></select></label>
-                  <label>IP Site Connect<select value={siteConnect} onChange={(e) => setSiteConnect(e.target.value)}><option value="nee">Nee</option><option value="ja">Ja</option><option value="advice">Laat adviseren</option></select></label>
-                </div>
-                <p>De pakketprijs van {euro.format(SLR5500_PACKAGE_PRICE)} excl. btw is een indicatieve configuratorprijs. Locatieafhankelijke bouwkundige werkzaamheden en aanvullende netwerklicenties kunnen de definitieve offerte wijzigen.</p>
-              </div>
-            )}
+          <Question number="07" title="Is er al een frequentievergunning?" subtitle="Als die er nog niet is, tonen we altijd de indicatieve RDI-kosten.">
+            <div className="choice-grid three"><Choice active={permit === "existing"} title="Ja" subtitle="Vergunning is aanwezig" onClick={() => setPermit("existing")} /><Choice active={permit === "help"} title="Nee, hulp gewenst" subtitle="Firecom vult de papieren in" onClick={() => setPermit("help")} /><Choice active={permit === "unknown"} title="Weet ik niet" subtitle="Firecom controleert dit" onClick={() => setPermit("unknown")} /></div>
+            {permit !== "existing" && <div className="permit-card"><div><span>RDI · eenmalig</span><strong>{euro.format(RDI_ONE_TIME)}</strong></div><div><span>RDI · per jaar</span><strong>{euro.format(annualRdi)}</strong></div><p>De vergunning voor uw portofoonnetwerk wordt rechtstreeks betaald aan het Rijksinspectie Digitale Infrastructuur (RDI). Firecom vult de papieren zover mogelijk voor u in; u verstuurt de aanvraag zelf. Met één repeater bestaat het jaarlijkse bedrag van {euro.format(RDI_ANNUAL_REPEATER)} uit {euro.format(RDI_ANNUAL_RADIOS)} per vergunning plus {euro.format(424)} per vaste post/repeater. Deze bedragen gelden voor kalenderjaar 2022 en kunnen inmiddels zijn gewijzigd. Firecom is niet aansprakelijk voor tariefwijzigingen.</p><a href="https://zoek.officielebekendmakingen.nl/stcrt-2021-45605.html" target="_blank" rel="noreferrer">Bekijk de officiële regeling en tarieventabel ↗</a></div>}
           </Question>
 
-          <Question number="08" title="Kies accu en laadoplossing" subtitle="Afwijkende accu’s en laders worden technisch en financieel in de definitieve offerte bevestigd.">
-            <div className="select-grid two-cols">
-              <label>Accu<select value={battery} onChange={(e) => setBattery(e.target.value as Battery)}><option value="standard">Standaard pakketaccu</option><option value="long">Langere gebruiksduur</option><option value="advice">Laat adviseren</option></select></label>
-              <label>Lader<select value={charger} onChange={(e) => setCharger(e.target.value as Charger)}><option value="none">Geen lader</option><option value="single">Enkelvoudige lader</option><option value="multi">Zesvoudige multilader</option><option value="battery">Reserve-/acculader</option></select></label>
-            </div>
+          <div id="onderhoud" />
+          <Question number="08" title="Welk onderhoudsniveau past bij uw organisatie?" subtitle="Alle drie onderhoudscontracten worden altijd aangeboden. Ook zonder contract blijft service mogelijk.">
+            <div className="maintenance-grid">{(Object.keys(maintenancePlans) as Maintenance[]).map((key) => { const item = maintenancePlans[key]; return <button type="button" key={key} className={`maintenance-card ${maintenance === key ? "active" : ""} ${key === "basis" ? "recommended" : ""}`} onClick={() => setMaintenance(key)}>{key === "basis" && <em>Meest gekozen</em>}<span className="radio-dot" /><h3>{item.name}</h3><strong>{item.price ? `${euro.format(item.price)} / jaar` : "Geen jaarlijkse kosten"}</strong><b>{item.response}</b><ul>{item.summary.map((line) => <li key={line}>{line}</li>)}</ul></button>; })}</div>
+            <p className="maintenance-note">Alle bedragen zijn excl. btw. Contractduur: 1 jaar. Onderhoudswerkzaamheden worden volgens het voorstel berekend tegen {euro.format(105)} per uur.</p>
           </Question>
         </div>
 
         <aside className="result-panel" aria-live="polite">
-          <div className="result-topline"><span className="live-dot" /> Live modeladvies</div>
-          <div className="model-visual" aria-hidden="true"><span className="antenna" /><span className="radio-shell"><i>{recommendation.product.name.replace("Motorola ", "")}</i><b /><b /><b /><em /></span></div>
-          <p className="recommendation-label">Beste passende benchmark</p>
-          <h2>{recommendation.product.name}</h2>
-          <span className="model-pill">{recommendation.product.label}</span>
-          <p className="variant-copy">{recommendation.product.variant}</p>
-          <code className="sku">SKU {recommendation.product.sku}</code>
-          <p className="model-copy">{recommendation.product.why}</p>
-
-          <div className="spec-grid">
-            <div><small>Bescherming</small><b>{recommendation.product.protection}</b></div>
-            <div><small>Capaciteit</small><b>{recommendation.product.channels}</b></div>
-            <div><small>Max. luidheid</small><b>{recommendation.product.audio}</b></div>
-            <div><small>Accuduur</small><b>{recommendation.product.battery}</b></div>
-          </div>
-
-          {atex === "unknown" && <div className="result-warning"><b>ATEX-status nog onbekend</b><span>Laat de omgeving beoordelen voordat je een definitieve keuze maakt.</span></div>}
-          {atex === "yes" && <div className="result-warning safe"><b>{atexHazard} · {atexZone} · {atexGroup}</b><span>Temperatuurklasse: {temperatureClass}. Definitief te valideren op offerte.</span></div>}
-
-          <div className="price-block">
-            <span>Indicatief live systeemtotaal</span>
-            <strong>{euro.format(systemTotal)}</strong>
-            <small>{quantity} × {recommendation.product.name} = {euro.format(recommendation.subtotal)}</small>
-            {repeater && <small>Compleet SLR5500-pakket = {euro.format(SLR5500_PACKAGE_PRICE)}</small>}
-            <small>Alles exclusief btw</small>
-          </div>
-          <p className="included-copy">{recommendation.product.included}</p>
-
-          <details className="breakdown" open>
-            <summary>Offerte-aanvullingen <span>+</span></summary>
-            {quoteItems.length ? <ul>{quoteItems.map((item) => <li key={item}>{item}</li>)}</ul> : <p>Geen aanvullende prijscomponenten geselecteerd.</p>}
-          </details>
-          <div className="quote-status"><span>Berekend subtotaal</span><b>{euro.format(systemTotal)}</b></div>
-          <p className="fineprint">Prijsbenchmark gecontroleerd op 19 juli 2026, exclusief btw. Geen offerte. Beschikbaarheid, pakketinhoud, licenties, frequenties en certificering worden bij bestelling bevestigd.</p>
+          <div className="result-topline"><span className="live-dot" /> Uw live configuratie</div>
+          <div className="product-photo"><img src={recommendation.product.image} alt={recommendation.product.name} /></div>
+          <span className="model-pill">{recommendation.product.label}</span><h2>{recommendation.product.name}</h2><p className="variant-copy">{recommendation.product.variant} · {band}</p><code className="sku">SKU {recommendation.product.sku}</code><p className="model-copy">{recommendation.product.why}</p>
+          <div className="spec-grid"><div><small>Bescherming</small><b>{recommendation.product.protection}</b></div><div><small>Audio</small><b>{recommendation.product.audio}</b></div><div><small>Accuduur</small><b>{recommendation.product.battery}</b></div><div><small>Groepen</small><b>{channels}</b></div></div>
+          <div className="price-block"><span>Indicatieve investering</span><strong>{euro.format(systemTotal)}</strong><small>exclusief btw</small></div>
+          <div className="summary-lines"><span><b>{quantity} × {recommendation.product.name}</b><strong>{euro.format(recommendation.subtotal)}</strong></span><span><b>Programmering</b><strong>{euro.format(programmingTotal)}</strong></span>{repeater && <><span><b>SLR5500-pakket</b><strong>{euro.format(SLR5500_PACKAGE_PRICE)}</strong></span><span><b>Plaatsing repeater</b><strong>{euro.format(REPEATER_INSTALLATION_PRICE)}</strong></span></>}<span className="total"><b>Totaal excl. btw</b><strong>{euro.format(systemTotal)}</strong></span></div>
+          {permit !== "existing" && <div className="aside-notice"><b>RDI rechtstreeks te betalen</b><span>{euro.format(RDI_ONE_TIME)} eenmalig + {euro.format(annualRdi)} per jaar (tarief 2022)</span></div>}
+          <div className="aside-notice maintenance"><b>Onderhoud: {plan.name}</b><span>{plan.price ? `${euro.format(plan.price)} per jaar` : "Geen jaarlijkse kosten"} · {plan.response}</span></div>
+          <a className="aside-cta" href="#offerte">Ontvang een echte offerte</a>
+          <p className="fineprint">Alle prijzen zijn indicatief en exclusief btw. Geen definitieve offerte. Beschikbaarheid, pakketinhoud, licenties, frequenties en certificering worden door Firecom bevestigd.</p>
         </aside>
       </section>
 
-      <div className="floating-price" role="status" aria-live="polite">
-        <div><small>Live totaal excl. btw</small><b>{euro.format(systemTotal)}</b></div>
-        <span>{recommendation.product.name}{repeater ? " + SLR5500" : ""}</span>
-      </div>
+      <div className="floating-price"><div><small>Live totaal excl. btw</small><b>{euro.format(systemTotal)}</b></div><span>{quantity} × {recommendation.product.name}{repeater ? " + SLR5500" : ""}</span></div>
 
-      <section className="quote-request" aria-labelledby="quote-title">
-        <div className="quote-intro">
-          <span className="step-kicker">Persoonlijke offerte</span>
-          <h2 id="quote-title">Laat Firecom je configuratie controleren.</h2>
-          <p>Stuur je keuzes naar het salesteam. Een specialist controleert de uitvoering, beschikbaarheid en eventuele vergunningen en neemt contact met je op voor een echte offerte.</p>
-          <div className="quote-summary">
-            <span><small>Geselecteerd</small><b>{quantity} × {recommendation.product.name}</b></span>
-            <span><small>Indicatief totaal</small><b>{euro.format(systemTotal)} excl. btw</b></span>
-            {repeater && <span><small>Bereikuitbreiding</small><b>SLR5500-pakket inbegrepen</b></span>}
-          </div>
-        </div>
-        <form className="quote-form" onSubmit={requestQuote}>
-          <label>Bedrijfsnaam<input name="companyName" value={companyName} onChange={(event) => setCompanyName(event.target.value)} autoComplete="organization" required maxLength={120} /></label>
-          <label>Naam<input name="contactName" value={contactName} onChange={(event) => setContactName(event.target.value)} autoComplete="name" required maxLength={120} /></label>
-          <label>E-mailadres<input name="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} autoComplete="email" required maxLength={254} /></label>
-          <label className="website-field" aria-hidden="true">Website<input name="website" value={website} onChange={(event) => setWebsite(event.target.value)} tabIndex={-1} autoComplete="off" /></label>
-          <button type="submit" disabled={quoteState === "sending" || quoteState === "sent"}>{quoteState === "sending" ? "Aanvraag verzenden…" : quoteState === "sent" ? "Aanvraag verzonden" : "Vraag mijn offerte aan"}</button>
-          <p className="privacy-note">Door te verzenden geef je Firecom toestemming om contact op te nemen over deze configuratie.</p>
-          {quoteState !== "idle" && quoteState !== "sending" && <div className={`form-status ${quoteState}`} role="status">{quoteMessage}</div>}
-        </form>
+      <section className="quote-request" id="offerte" aria-labelledby="quote-title">
+        <div className="quote-intro"><span className="step-kicker">Laatste stap</span><h2 id="quote-title">Ontvang een echte offerte van Firecom.</h2><p>Laat uw gegevens achter. Firecom controleert de configuratie, vergunning, bereik en pakketinhoud en neemt contact met u op.</p><div className="quote-summary"><span><small>Geselecteerd</small><b>{quantity} × {recommendation.product.name}</b></span><span><small>Investering</small><b>{euro.format(systemTotal)} excl. btw</b></span><span><small>Onderhoud</small><b>{plan.name}{plan.price ? ` · ${euro.format(plan.price)}/jaar` : ""}</b></span></div></div>
+        <form className="quote-form" onSubmit={requestQuote}><label>Bedrijfsnaam<input value={companyName} onChange={(e) => setCompanyName(e.target.value)} autoComplete="organization" required /></label><label>Naam<input value={contactName} onChange={(e) => setContactName(e.target.value)} autoComplete="name" required /></label><label>E-mailadres<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required /></label><label className="website-field" aria-hidden="true">Website<input value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} /></label><button type="submit" disabled={quoteState === "sending" || quoteState === "sent"}>{quoteState === "sending" ? "Verzenden…" : quoteState === "sent" ? "Aanvraag verzonden" : "Vraag mijn offerte aan"}</button><p className="privacy-note">Door te verzenden geeft u Firecom toestemming om contact op te nemen over deze configuratie.</p>{quoteState !== "idle" && quoteState !== "sending" && <div className={`form-status ${quoteState}`}>{quoteMessage}</div>}</form>
       </section>
 
-      <section className="comparison" aria-labelledby="compare-title">
-        <div className="section-heading"><span className="step-kicker">Modeloverzicht</span><h2 id="compare-title">Van praktische werkportofoon tot ATEX-topmodel.</h2></div>
-        <div className="comparison-grid">
-          <article><span>R2</span><b>Vanaf €329,75</b><p>IP55 · 64 kanalen · eenvoudige spraak</p></article>
-          <article><span>R5</span><b>Vanaf €435,95</b><p>IP67 · betere audio · tot 256 kanalen</p></article>
-          <article><span>R7</span><b>Vanaf €790,95</b><p>IP68 · maximale connectiviteit en veiligheid</p></article>
-          <article><span>R7Ex</span><b>Vanaf €1.227,15</b><p>ATEX/IECEx · uitsluitend gecertificeerde accessoires</p></article>
-        </div>
-      </section>
-
-      <footer><span>PORTOFOON<span>PRIJS</span></span><p>Een technische voorselectie en openbare prijsbenchmark — geen offerte, dekkingsmeting of ATEX-validatie.</p></footer>
+      <section className="comparison" aria-labelledby="compare-title"><div className="section-intro"><span className="step-kicker">Alle artikelen behouden</span><h2 id="compare-title">De complete Motorola-selectie</h2></div><div className="comparison-grid">{Object.entries(products).map(([key, product]) => <article key={key}><img src={product.image} alt="" /><span>{product.name}</span><b>{product.variant}</b><small>SKU {product.sku}</small><strong>{euro.format(product.price)}</strong><p>{product.protection} · {product.audio} · VHF/UHF</p></article>)}</div></section>
+      <footer><span>COMMUNICATIE <em>CONFIGURATOR</em></span><p>Een indicatieve keuzehulp van Firecom · alle prijzen exclusief btw.</p></footer>
     </main>
   );
 }
 
-function Question({ number, title, subtitle, children }: { number: string; title: string; subtitle: string; children: React.ReactNode }) {
-  return <fieldset className="question-group"><legend><span>{number}</span><div><b>{title}</b><small>{subtitle}</small></div></legend>{children}</fieldset>;
-}
-
-function Choice({ active, title, subtitle, onClick, disabled = false }: { active: boolean; title: string; subtitle: string; onClick: () => void; disabled?: boolean }) {
-  return <button type="button" className={`choice-card ${active ? "active" : ""}`} onClick={onClick} aria-pressed={active} disabled={disabled}><span className="radio-dot" aria-hidden="true" /><b>{title}</b><small>{subtitle}</small>{disabled && <em>Niet beschikbaar</em>}</button>;
-}
+function Question({ number, title, subtitle, children }: { number: string; title: string; subtitle: string; children: React.ReactNode }) { return <fieldset className="question-group"><legend><span>{number}</span><div><b>{title}</b><small>{subtitle}</small></div></legend>{children}</fieldset>; }
+function Choice({ active, title, subtitle, onClick, disabled = false }: { active: boolean; title: string; subtitle: string; onClick: () => void; disabled?: boolean }) { return <button type="button" className={`choice-card ${active ? "active" : ""}`} onClick={onClick} aria-pressed={active} disabled={disabled}><span className="radio-dot" /><b>{title}</b><small>{subtitle}</small>{disabled && <em>Niet beschikbaar</em>}</button>; }
+function Preset({ icon, title, text, action, featured = false }: { icon: string; title: string; text: string; action: () => void; featured?: boolean }) { return <button type="button" className={`preset-card ${featured ? "featured" : ""}`} onClick={action}><span>{icon}</span><b>{title}</b><small>{text}</small><em>Start hiermee →</em></button>; }

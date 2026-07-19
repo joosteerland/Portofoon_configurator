@@ -8,18 +8,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const image = `${protocol}://${host}/og-calm.png`;
   return {
-    title: "PortofoonPrijs — professionele Motorola-configurator",
-    description: "Configureer een passende Motorola R2, R5, R7 of R7Ex en ontvang een onderbouwd modeladvies met actuele openbare vanafprijs.",
+    title: "Communicatie configurator | Firecom",
+    description: "Stel een professionele Motorola-portofoonoplossing samen en ontvang een indicatieve prijs en een passende offerte van Firecom.",
     openGraph: {
-      title: "Configureer de juiste portofoonoplossing",
-      description: "Van Motorola R2 tot explosieveilige R7Ex — technisch modeladvies met actuele vanafprijs.",
+      title: "Communicatie configurator | Firecom",
+      description: "Configureer toestellen, bereik, vergunning en onderhoud met een live indicatieve prijs.",
       type: "website",
-      images: [{ url: image, width: 1536, height: 1024, alt: "PortofoonPrijs calculator" }],
+      images: [{ url: image, width: 1536, height: 1024, alt: "Communicatie configurator van Firecom" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Configureer de juiste portofoonoplossing",
-      description: "Van Motorola R2 tot explosieveilige R7Ex — technisch modeladvies met actuele vanafprijs.",
+      title: "Communicatie configurator | Firecom",
+      description: "Configureer toestellen, bereik, vergunning en onderhoud met een live indicatieve prijs.",
       images: [image],
     },
   };

@@ -20,12 +20,12 @@ test("server-renders the professional configurator", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>PortofoonPrijs — professionele Motorola-configurator<\/title>/i);
-  assert.match(html, /Configureer de juiste/);
-  assert.match(html, /Is ATEX of IECEx verplicht\?/);
+  assert.match(html, /<title>Communicatie configurator \| Firecom<\/title>/i);
+  assert.match(html, /Communicatie/);
+  assert.match(html, /Is een ATEX-toestel nodig\?/);
   assert.match(html, /Motorola R5/);
-  assert.match(html, /3\.487,60/);
-  assert.match(html, /Indicatief live systeemtotaal/);
+  assert.match(html, /3\.687,60/);
+  assert.match(html, /Indicatieve investering/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
 });
 
@@ -36,11 +36,14 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   for (const price of ["329.75", "435.95", "499.95", "804.9", "790.95", "1227.15", "1563.3"]) {
     assert.match(page, new RegExp(`price: ${price.replace(".", "\\.")}`));
   }
-  assert.match(page, /Standaard R7-accessoires zijn niet uitwisselbaar/);
-  assert.match(page, /SLR5500-infrastructuur/);
+  assert.match(page, /één ATEX-productfamilie/);
+  assert.match(page, /Complete repeateroplossing/);
   assert.match(page, /SLR5500_PACKAGE_PRICE = 5500/);
+  assert.match(page, /PROGRAMMING_PRICE = 25/);
+  assert.match(page, /REPEATER_INSTALLATION_PRICE = 950/);
+  assert.match(page, /RDI_ONE_TIME = 219/);
+  assert.match(page, /LITE/);
+  assert.match(page, /UITGEBREID/);
   assert.match(page, /Live totaal excl\. btw/);
-  assert.match(page, /Professionele UHF\/VHF-uitvoeringen zijn in Nederland vergunningsplichtig/);
-  assert.match(page, /Prijsbenchmark gecontroleerd op 19 juli 2026/);
-  assert.match(layout, /professionele Motorola-configurator/);
+  assert.match(layout, /Communicatie configurator/);
 });
