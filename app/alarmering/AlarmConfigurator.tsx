@@ -49,6 +49,7 @@ export default function AlarmConfigurator() {
   const [website, setWebsite] = useState("");
   const [quoteState, setQuoteState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [quoteMessage, setQuoteMessage] = useState("");
+  const [selectedPreset, setSelectedPreset] = useState<"bhv" | "safety" | "fire" | "hybrid" | null>(null);
 
   const independentOfTelecom = independenceMode !== "off";
   const atex = specialAreas.includes("ATEX-zone");
@@ -83,6 +84,7 @@ export default function AlarmConfigurator() {
   };
 
   const applyPreset = (preset: "bhv" | "safety" | "fire" | "hybrid") => {
+    setSelectedPreset(preset);
     if (preset === "bhv") { setApplications(["BHV"]); setReliability(2); setIndependenceMode("off"); setAppUsers(15); setDevices(0); setPagers(0); setLocations(1); setBuildings(1); setEspa(false); setDashboard(true); }
     if (preset === "safety") { setApplications(["Agressie", "Alleenwerkers"]); setReliability(2); setIndependenceMode("off"); setAppUsers(5); setDevices(10); setPagers(0); setInitiators(["Fysieke noodknop", "App"]); setEspa(false); }
     if (preset === "fire") { setApplications(["Bedrijfsbrandweer", "Brandmeldinstallatie"]); setReliability(4); setIndependenceMode("automatic"); setAppUsers(0); setDevices(0); setPagers(20); setTransmitters(2); setEspa(true); setDashboard(true); setCoverageStudy(true); }
@@ -129,7 +131,7 @@ export default function AlarmConfigurator() {
 
       <section className="quick-start" id="alarm-start" aria-labelledby="alarm-quick-title">
         <div className="section-intro"><span className="step-kicker">Voorinstellingen</span><h2 id="alarm-quick-title">Kies een uitgangspunt</h2><p>Een voorinstelling vult de belangrijkste keuzes in. Daarna kunt u alles aanpassen.</p></div>
-        <div className="preset-grid"><Preset number="01" title="BHV via app" text="Alarmeren via Firecom Protect" action={() => applyPreset("bhv")} /><Preset number="02" title="Persoonlijke veiligheid" text="Agressie en alleenwerkers met noodknop" action={() => applyPreset("safety")} /><Preset number="03" title="Bedrijfsbrandweer" text="Onafhankelijke RF-alarmering met alarmontvangers" action={() => applyPreset("fire")} featured /><Preset number="04" title="Hybride industrie" text="RF primair, apps aanvullend en ESPA" action={() => applyPreset("hybrid")} /></div>
+        <div className="preset-grid"><Preset number="01" title="BHV via app" text="Alarmeren via Firecom Protect" action={() => applyPreset("bhv")} active={selectedPreset === "bhv"} /><Preset number="02" title="Persoonlijke veiligheid" text="Agressie en alleenwerkers met noodknop" action={() => applyPreset("safety")} active={selectedPreset === "safety"} /><Preset number="03" title="Bedrijfsbrandweer" text="Onafhankelijke RF-alarmering met alarmontvangers" action={() => applyPreset("fire")} active={selectedPreset === "fire"} /><Preset number="04" title="Hybride industrie" text="RF primair, apps aanvullend en ESPA" action={() => applyPreset("hybrid")} active={selectedPreset === "hybrid"} /></div>
       </section>
 
       <section className="configurator-shell" aria-label="Alarmeringsconfigurator">
@@ -208,7 +210,7 @@ export default function AlarmConfigurator() {
 function Question({ number, title, subtitle, children }: { number: string; title: string; subtitle: string; children: React.ReactNode }) { return <fieldset className="question-group"><legend><span>{number}</span><div><b>{title}</b><small>{subtitle}</small></div></legend>{children}</fieldset>; }
 function Choice({ active, title, subtitle, onClick }: { active: boolean; title: string; subtitle: string; onClick: () => void }) { return <button type="button" className={`choice-card ${active ? "active" : ""}`} onClick={onClick} aria-pressed={active}><span className="radio-dot" /><b>{title}</b><small>{subtitle}</small></button>; }
 function Feature({ active, title, subtitle, onClick }: { active: boolean; title: string; subtitle: string; onClick: () => void }) { return <button type="button" className={`choice-card alarm-feature ${active ? "active" : ""}`} onClick={onClick} aria-pressed={active}><span className="radio-dot" /><b>{title}</b><small>{subtitle}</small></button>; }
-function Preset({ number, title, text, action, featured = false }: { number: string; title: string; text: string; action: () => void; featured?: boolean }) { return <button type="button" className={`preset-card ${featured ? "featured" : ""}`} onClick={action}><span>{number}</span><b>{title}</b><small>{text}</small><em>Gebruik deze voorinstelling →</em></button>; }
+function Preset({ number, title, text, action, active }: { number: string; title: string; text: string; action: () => void; active: boolean }) { return <button type="button" className={`preset-card ${active ? "active" : ""}`} onClick={action} aria-pressed={active}><span>{number}</span><b>{title}</b><small>{text}</small><em>Gebruik deze voorinstelling →</em></button>; }
 function NumberField({ label, value, min, max, setValue }: { label: string; value: number; min: number; max: number; setValue: (value: number) => void }) { return <div className="alarm-number"><label>{label}</label><div><button type="button" onClick={() => setValue(Math.max(min, value - 1))}>−</button><output>{value}</output><button type="button" onClick={() => setValue(Math.min(max, value + 1))}>+</button></div></div>; }
 function Receiver({ title, subtitle, value, setValue, image }: { title: string; subtitle: string; value: number; setValue: (value: number) => void; image?: string }) { const dedicated = image?.endsWith("twig-embody.jpg"); return <div className="receiver-card">{image ? <span className={`receiver-icon ${dedicated ? "receiver-icon-device" : ""}`} aria-hidden="true"><img src={image} alt="" /></span> : <span className="receiver-symbol" aria-hidden="true">{title.startsWith("App") ? "APP" : "SOS"}</span>}<b>{title}</b><small>{subtitle}</small><div><button type="button" onClick={() => setValue(Math.max(0, value - 1))}>−</button><output>{value}</output><button type="button" onClick={() => setValue(Math.min(500, value + 1))}>+</button></div></div>; }
 function FirecomFooter() { return <footer className="company-footer"><div><a className="footer-back" href="../">← Configuratorkeuze</a><b>Firecom B.V.</b><span>Randweg 10–12 · 2941 CG Lekkerkerk</span></div><div className="footer-contact"><a href="tel:+31854011980">085 401 19 80</a><a href="mailto:info@firecom.nl">info@firecom.nl</a></div><p>Een Firecom-specialist controleert iedere aanvraag voordat u een offerte ontvangt.</p></footer>; }

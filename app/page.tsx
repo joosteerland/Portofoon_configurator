@@ -83,6 +83,7 @@ export default function Home() {
   const [website, setWebsite] = useState("");
   const [quoteState, setQuoteState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [quoteMessage, setQuoteMessage] = useState("");
+  const [selectedPreset, setSelectedPreset] = useState<"simple" | "logistics" | "industrial" | "atex" | null>(null);
 
   const recommendation = useMemo(() => {
     let key: ModelKey;
@@ -119,6 +120,7 @@ export default function Home() {
   }, [quantity, atex, environment, noise, display, safety, repeater]);
 
   const applyPreset = (preset: "simple" | "logistics" | "industrial" | "atex") => {
+    setSelectedPreset(preset);
     if (preset === "simple") { setAtex("no"); setDisplay("none"); setEnvironment("normal"); setNoise("normal"); setSafety("none"); setChannels("1-3"); setRepeater(false); setEspa("none"); }
     if (preset === "logistics") { setAtex("no"); setDisplay("small"); setEnvironment("wet"); setNoise("loud"); setSafety("basic"); setChannels("3-10"); }
     if (preset === "industrial") { setAtex("no"); setDisplay("none"); setEnvironment("heavy"); setNoise("extreme"); setSafety("advanced"); setChannels("10+"); }
@@ -171,10 +173,10 @@ export default function Home() {
       <section className="quick-start" id="start" aria-labelledby="quick-title">
         <div className="section-intro"><span className="step-kicker">Voorinstellingen</span><h2 id="quick-title">Kies een uitgangspunt</h2><p>Een voorinstelling vult de belangrijkste keuzes in. Daarna kunt u alles aanpassen.</p></div>
         <div className="preset-grid">
-          <Preset number="01" title="Eenvoudige communicatie" text="Vaste groepen, rustige omgeving" action={() => applyPreset("simple")} />
-          <Preset number="02" title="Magazijn & logistiek" text="Lawaai, water en statusweergave" action={() => applyPreset("logistics")} />
-          <Preset number="03" title="Industrie" text="Zware omstandigheden en veiligheid" action={() => applyPreset("industrial")} />
-          <Preset number="04" title="Explosiegevaar" text="Motorola R7Ex voor ATEX-omgevingen" action={() => applyPreset("atex")} featured />
+          <Preset number="01" title="Eenvoudige communicatie" text="Vaste groepen, rustige omgeving" action={() => applyPreset("simple")} active={selectedPreset === "simple"} />
+          <Preset number="02" title="Magazijn & logistiek" text="Lawaai, water en statusweergave" action={() => applyPreset("logistics")} active={selectedPreset === "logistics"} />
+          <Preset number="03" title="Industrie" text="Zware omstandigheden en veiligheid" action={() => applyPreset("industrial")} active={selectedPreset === "industrial"} />
+          <Preset number="04" title="Explosiegevaar" text="Motorola R7Ex voor ATEX-omgevingen" action={() => applyPreset("atex")} active={selectedPreset === "atex"} />
         </div>
       </section>
 
@@ -263,5 +265,5 @@ export default function Home() {
 
 function Question({ number, title, subtitle, children }: { number: string; title: string; subtitle: string; children: React.ReactNode }) { return <fieldset className="question-group"><legend><span>{number}</span><div><b>{title}</b><small>{subtitle}</small></div></legend>{children}</fieldset>; }
 function Choice({ active, title, subtitle, onClick, disabled = false }: { active: boolean; title: string; subtitle: string; onClick: () => void; disabled?: boolean }) { return <button type="button" className={`choice-card ${active ? "active" : ""}`} onClick={onClick} aria-pressed={active} disabled={disabled}><span className="radio-dot" /><b>{title}</b><small>{subtitle}</small>{disabled && <em>Niet beschikbaar</em>}</button>; }
-function Preset({ number, title, text, action, featured = false }: { number: string; title: string; text: string; action: () => void; featured?: boolean }) { return <button type="button" className={`preset-card ${featured ? "featured" : ""}`} onClick={action}><span>{number}</span><b>{title}</b><small>{text}</small><em>Gebruik deze voorinstelling →</em></button>; }
+function Preset({ number, title, text, action, active }: { number: string; title: string; text: string; action: () => void; active: boolean }) { return <button type="button" className={`preset-card ${active ? "active" : ""}`} onClick={action} aria-pressed={active}><span>{number}</span><b>{title}</b><small>{text}</small><em>Gebruik deze voorinstelling →</em></button>; }
 function FirecomFooter() { return <footer className="company-footer"><div><b>Firecom B.V.</b><span>Randweg 10–12 · 2941 CG Lekkerkerk</span></div><div className="footer-contact"><a href="tel:+31854011980">085 401 19 80</a><a href="mailto:info@firecom.nl">info@firecom.nl</a></div><p>Een Firecom-specialist controleert iedere aanvraag voordat u een offerte ontvangt.</p></footer>; }

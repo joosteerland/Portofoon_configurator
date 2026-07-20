@@ -19,7 +19,7 @@
 
 /* Donkere Firecom-kleuren voor de alarmeringsconfigurator. */
 .alarm-configurator .alarm-switch,.alarm-configurator .alarm-number,.alarm-configurator .receiver-card,.alarm-configurator .rf-controls .select-label,.alarm-configurator .alarm-product-grid article{border-color:#494458;background:#211e31}
-.alarm-configurator .alarm-switch.active{border-color:#f6b916;background:#353040}.alarm-configurator .alarm-switch.active>span{border-color:#f6b916;background:#f6b916;color:#171426}
+.alarm-configurator .alarm-switch.active{border-color:#f6b916;background:#211e31;box-shadow:inset 4px 0 0 #f6b916}.alarm-configurator .alarm-switch.active>span{border-color:#f6b916;background:#f6b916;color:#171426}
 .alarm-configurator .alarm-number button,.alarm-configurator .receiver-card button{background:#353044;color:#f6b916}.alarm-configurator .alarm-number output,.alarm-configurator .receiver-card output{background:#211e31;color:#fff}
 .alarm-configurator .receiver-icon,.alarm-configurator .receiver-symbol,.alarm-configurator .rf-image,.alarm-configurator .alarm-product-grid article>div{border-color:#494458;background:#302c3f;box-shadow:none}.alarm-configurator .receiver-card>b,.alarm-configurator .rf-package h3,.alarm-configurator .alarm-product-grid span,.alarm-configurator .alarm-product-grid b,.alarm-configurator .alarm-product-grid strong{color:#fff}.alarm-configurator .receiver-card>small,.alarm-configurator .rf-package p,.alarm-configurator .rf-disclaimer,.alarm-configurator .alarm-product-grid p{color:#b5b1c4}
 .alarm-configurator .rf-package{border-color:#59536c;background:#29253a}.alarm-configurator .protect-symbol{background:#38324e;color:#fff}.alarm-configurator .protect-symbol span{background:#f6b916;color:#171426}
