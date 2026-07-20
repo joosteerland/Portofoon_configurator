@@ -61,7 +61,7 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   assert.match(page, /Waarom dit voorstel/);
   assert.match(page, /Firecom-specialist controleert iedere aanvraag/);
   assert.match(page, /085 401 19 80/);
-  assert.match(page, /firecom-logo-secondary\.png/);
+  assert.match(page, /firecom-logo-white\.png/);
   assert.match(layout, /Communicatie configurator/);
   assert.match(layout, /firecom-favicon-brand-32\.png/);
 });
@@ -135,9 +135,9 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(alarm, /Firecom-specialist controleert iedere aanvraag/);
   assert.match(portal, /href="\.\/communicatie\/"/);
   assert.match(portal, /href="\.\/alarmering\/"/);
-  assert.match(portal, /firecom-logo-secondary\.png/);
+  assert.match(portal, /firecom-logo-white\.png/);
   assert.match(portal, /Firecom <b>online configurator<\/b>/);
-  assert.match(alarm, /firecom-logo-secondary\.png/);
+  assert.match(alarm, /firecom-logo-white\.png/);
   assert.match(portal, /speakerIcon/);
   assert.match(portal, /sirenIcon/);
   assert.doesNotMatch(portal, /🔊|🚨/);

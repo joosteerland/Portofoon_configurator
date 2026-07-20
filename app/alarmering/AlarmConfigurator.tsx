@@ -112,7 +112,7 @@ export default function AlarmConfigurator() {
     <main className="alarm-configurator">
       <header className="site-header">
         <a className="brand" href="../" aria-label="Terug naar configuratorkeuze">
-          <img className="brand-logo" src="../firecom-logo-secondary.png" alt="" aria-hidden="true" />
+          <img className="brand-logo" src="../firecom-logo-white.png" alt="" aria-hidden="true" />
           <span className="brand-title">Firecom <b>online configurator</b></span>
         </a>
         <a className="header-cta" href="#alarm-offerte">Vraag offerte aan</a>

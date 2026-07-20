@@ -5,7 +5,7 @@ export default function ConfiguratorChoice() {
     <main className={styles.page}>
       <header className={styles.header}>
         <a className={styles.brand} href="./" aria-label="Firecom configuratoren">
-          <img className={styles.brandLogo} src="./firecom-logo-secondary.png" alt="" aria-hidden="true" />
+          <img className={styles.brandLogo} src="./firecom-logo-white.png" alt="" aria-hidden="true" />
           <span className={styles.brandTitle}>Firecom <b>online configurator</b></span>
         </a>
         <span className={styles.help}>Samenstellen en prijsindicatie</span>
