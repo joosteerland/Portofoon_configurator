@@ -4,7 +4,7 @@ export default function ConfiguratorChoice() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <a className={styles.brand} href="./" aria-label="Firecom configuratoren">
+        <a className={styles.brand} href="./" aria-label="Firecom Keuzehulp">
           <img className={styles.brandLogo} src="./firecom-logo-white.png" alt="" aria-hidden="true" />
           <span className={styles.brandTitle}>Firecom <b>online configurator</b></span>
         </a>
@@ -12,7 +12,7 @@ export default function ConfiguratorChoice() {
       </header>
 
       <section className={styles.intro} aria-labelledby="choice-title">
-        <span className={styles.eyebrow}><i /> Firecom configuratoren</span>
+        <span className={styles.eyebrow}><i /> Firecom Keuzehulp</span>
         <h1 id="choice-title">Kies uw<br /><em>toepassing</em></h1>
         <p>Stel uw communicatie- of alarmeringsoplossing samen. U ziet welke onderdelen zijn gekozen en welke kosten daarbij horen.</p>
       </section>
