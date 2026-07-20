@@ -54,7 +54,7 @@
 /* Firecom donker huisstijlpalet. Indeling en inhoud blijven ongewijzigd. */
 :global(html),:global(body){background:#171426;color:#f7f6fb}
 .page{--navy:#171426;--blue:#f6b916;--yellow:#f6b916;--muted:#b5b1c4;--line:#494458;background:radial-gradient(circle at 11% 26%,#294b63 0,#171426 35%,#171426 100%)}
-.header{border-color:#3d394c}.brand{color:#fff}.brandLogo{filter:none;background:#fff}.brandTitle{border-color:#5b566b;color:#d8d5e0}.brandTitle b{color:var(--yellow)}.help{color:#c9c5d1}
+.header{border-color:#3d394c}.brand{color:#fff}.brandLogo{filter:none;background:transparent}.brandTitle{border-color:#5b566b;color:#d8d5e0}.brandTitle b{color:var(--yellow)}.help{color:#c9c5d1}
 .intro h1{color:#fff}.intro h1 em{color:#fff}.intro p{color:var(--muted)}.eyebrow{color:var(--yellow)}
 .choice{border-color:var(--line);border-left-color:var(--yellow);background:#211e31}.choice:hover{border-color:#77718a;background:#29253a}.choice.alarming{border-color:var(--line);border-left-color:var(--yellow);background:#211e31}.number{color:#8f899d}.icon,.alarming .icon{border-color:#8b8499;color:var(--yellow)}.content small,.content strong{color:var(--yellow)}.content h2{color:#fff}.content p{color:var(--muted)}
 .footer{border-color:var(--line);color:#c8c4d0}.footer b{color:#fff}.footer a{color:var(--yellow)}
