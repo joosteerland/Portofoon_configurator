@@ -50,3 +50,11 @@
 @media(max-width:760px){.page{padding:0 14px 28px}.header{height:68px}.brand{gap:7px}.brandLogo{width:105px}.brandTitle{padding-left:7px;font-size:7px}.brandTitle b{font-size:8px}.help{display:none}.backLink{font-size:10px}.intro{padding:50px 5px 32px}.intro h1{font-size:46px}.intro p{font-size:16px}.choices{grid-template-columns:1fr}.choice{min-height:265px;padding:25px;grid-template-columns:55px 1fr;gap:15px}.icon{width:52px;height:52px}.speakerIcon,.sirenIcon{transform:scale(.82);transform-origin:top left}.content h2{font-size:28px}.footer{grid-template-columns:1fr;gap:18px}.placeholder{padding:55px 5px 90px}.placeholder h1{font-size:44px}.placeholder p{font-size:15px}}
 
 @media(prefers-reduced-motion:reduce){.choice{transition:none}}
+
+/* Firecom donker huisstijlpalet. Indeling en inhoud blijven ongewijzigd. */
+:global(html),:global(body){background:#171426;color:#f7f6fb}
+.page{--navy:#171426;--blue:#f6b916;--yellow:#f6b916;--muted:#b5b1c4;--line:#494458;background:radial-gradient(circle at 11% 26%,#294b63 0,#171426 35%,#171426 100%)}
+.header{border-color:#3d394c}.brand{color:#fff}.brandLogo{filter:brightness(0) invert(1)}.brandTitle{border-color:#5b566b;color:#d8d5e0}.brandTitle b{color:var(--yellow)}.help{color:#c9c5d1}
+.intro h1{color:#fff}.intro h1 em{color:#fff}.intro p{color:var(--muted)}.eyebrow{color:var(--yellow)}
+.choice{border-color:var(--line);border-left-color:var(--yellow);background:#211e31}.choice:hover{border-color:#77718a;background:#29253a}.choice.alarming{border-color:var(--line);border-left-color:var(--yellow);background:#211e31}.number{color:#8f899d}.icon,.alarming .icon{border-color:#8b8499;color:var(--yellow)}.content small,.content strong{color:var(--yellow)}.content h2{color:#fff}.content p{color:var(--muted)}
+.footer{border-color:var(--line);color:#c8c4d0}.footer b{color:#fff}.footer a{color:var(--yellow)}
