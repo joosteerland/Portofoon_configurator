@@ -60,7 +60,7 @@ const RDI_ANNUAL_REPEATER = 507;
 const euro = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", minimumFractionDigits: 2 });
 
 export default function Home() {
-  const [quantity, setQuantity] = useState(8);
+  const [quantity, setQuantity] = useState(0);
   const [atex, setAtex] = useState<Atex>("no");
   const [display, setDisplay] = useState<Display>("none");
   const [environment, setEnvironment] = useState<Environment>("normal");
@@ -188,7 +188,7 @@ export default function Home() {
 
           <Question number="05" title="Frequentie, aantal en laden" subtitle="VHF en UHF zijn voor alle toestelseries beschikbaar. Firecom adviseert wat het beste past.">
             <div className="option-row"><div><span className="sub-label">Frequentieband</span><div className="choice-grid two"><Choice active={band === "UHF"} title="UHF" subtitle="Vaak in en rond gebouwen" onClick={() => setBand("UHF")} /><Choice active={band === "VHF"} title="VHF" subtitle="Vaak op open terrein" onClick={() => setBand("VHF")} /></div></div><div><label className="select-label">Accu<select value={battery} onChange={(e) => setBattery(e.target.value as Battery)}><option value="standard">Standaard pakketaccu</option><option value="long">Langere gebruiksduur</option><option value="advice">Laat adviseren</option></select></label><label className="select-label">Lader<select value={charger} onChange={(e) => setCharger(e.target.value as Charger)}><option value="none">Geen lader</option><option value="single">Enkelvoudige lader</option><option value="multi">Zesvoudige multilader</option><option value="battery">Reserve-/acculader</option></select></label></div></div>
-            <div className="quantity-row"><label htmlFor="quantity">Aantal portofoons</label><div className="quantity-control"><button type="button" onClick={() => setQuantity((v) => Math.max(1, v - 1))}>−</button><output><strong>{quantity}</strong><span>stuks</span></output><button type="button" onClick={() => setQuantity((v) => Math.min(250, v + 1))}>+</button></div><input id="quantity" className="range" type="range" min="1" max="250" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></div>
+            <div className="quantity-row"><label htmlFor="quantity">Aantal portofoons</label><div className="quantity-control"><button type="button" onClick={() => setQuantity((v) => Math.max(0, v - 1))}>−</button><output><strong>{quantity}</strong><span>stuks</span></output><button type="button" onClick={() => setQuantity((v) => Math.min(250, v + 1))}>+</button></div><input id="quantity" className="range" type="range" min="0" max="250" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} /></div>
             <div className="cost-note"><b>Programmering direct meegerekend</b><span>{quantity} × {euro.format(PROGRAMMING_PRICE)} = {euro.format(programmingTotal)} excl. btw</span></div>
           </Question>
 
@@ -233,7 +233,7 @@ export default function Home() {
         </aside>
       </section>
 
-      <div className="floating-price"><div><small>Live totaal excl. btw</small><b>{euro.format(systemTotal)}</b></div><span>{quantity} × {recommendation.product.name}{repeater ? " + SLR5500" : ""}{espa !== "none" ? " + ESPA 4.4.4" : ""}</span></div>
+      <div className="floating-price"><div><small>Indicatieve prijs · excl. btw</small><b>{euro.format(systemTotal)}</b></div><span>{quantity} × {recommendation.product.name}{repeater ? " + SLR5500" : ""}{espa !== "none" ? " + ESPA 4.4.4" : ""}</span></div>
 
       <section className="quote-request" id="offerte" aria-labelledby="quote-title">
         <div className="quote-intro"><span className="step-kicker">Laatste stap</span><h2 id="quote-title">Ontvang een echte offerte van Firecom.</h2><p>Laat uw gegevens achter. Firecom controleert de configuratie, vergunning, bereik en pakketinhoud en neemt contact met u op.</p><div className="quote-summary"><span><small>Geselecteerd</small><b>{quantity} × {recommendation.product.name}</b></span><span><small>Investering</small><b>{euro.format(systemTotal)} excl. btw</b></span><span><small>Onderhoud</small><b>{plan.name}{plan.price ? ` · ${euro.format(plan.price)}/jaar` : ""}</b></span></div></div>

@@ -28,7 +28,7 @@ export default function AlarmConfigurator() {
   const [buildings, setBuildings] = useState(1);
   const [floors, setFloors] = useState(3);
   const [specialAreas, setSpecialAreas] = useState<string[]>([]);
-  const [appUsers, setAppUsers] = useState(10);
+  const [appUsers, setAppUsers] = useState(0);
   const [devices, setDevices] = useState(0);
   const [pagers, setPagers] = useState(0);
   const [initiators, setInitiators] = useState<string[]>(["App", "Dashboard"]);
@@ -183,7 +183,7 @@ export default function AlarmConfigurator() {
         </aside>
       </section>
 
-      <div className="floating-price alarm-floating"><div><small>Bekende investering excl. btw</small><b>{euro.format(calculation.knownInvestment)}</b></div><span>{advice.name} · jaarlijks {euro.format(calculation.knownYearly)}</span></div>
+      <div className="floating-price alarm-floating"><div><small>Indicatieve prijs · excl. btw</small><b>{euro.format(calculation.knownInvestment)}</b></div><span>{advice.name} · jaarlijks {euro.format(calculation.knownYearly)}</span></div>
 
       <section className="alarm-products" aria-labelledby="alarm-products-title"><div className="section-intro"><span className="step-kicker">Indicatieve hardware</span><h2 id="alarm-products-title">Herkenbare apparatuur</h2><p>De definitieve systeemopbouw wordt technisch gecontroleerd voordat Firecom een offerte uitbrengt.</p></div><div className="alarm-product-grid"><article><div><img src="./swissphone-c35.png" alt="Swissphone s.QUAD C35-alarmontvanger" /></div><span>Alarmontvanger</span><b>Swissphone s.QUAD C35 met oplaadstation</b><strong>{euro.format(ALARM_PRICES.pagerWithCharger)}</strong><p>Gekoppelde laders kunnen eenvoudig als multiladeropstelling worden gebruikt.</p></article><article><div><img src="./centrale-apparatuur.jpg" alt="Conceptvoorstel centrale alarmeringsapparatuur" /></div><span>Centrale RF-apparatuur</span><b>Merkneutraal conceptvoorstel</b><strong>Vanaf {euro.format(ALARM_PRICES.simpleBaseStation)}</strong><p>De exacte kast, zenders, antennes, noodstroom en koppelingen volgen uit het technisch ontwerp.</p></article></div></section>
 

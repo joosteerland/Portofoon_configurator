@@ -25,7 +25,7 @@ test("server-renders the professional configurator", async () => {
   assert.match(html, /Communicatie/);
   assert.match(html, /Is een ATEX-toestel nodig\?/);
   assert.match(html, /Motorola R5/);
-  assert.match(html, /2\.838,00/);
+  assert.match(html, /€\s*0,00/);
   assert.match(html, /Indicatieve investering/);
   assert.match(html, /ESPA 4\.4\.4/);
   assert.doesNotMatch(html, /codex-preview|Building your site|react-loading-skeleton/i);
@@ -53,7 +53,9 @@ test("keeps product pricing and safety guardrails explicit", async () => {
   assert.match(page, /RDI_ONE_TIME = 219/);
   assert.match(page, /LITE/);
   assert.match(page, /UITGEBREID/);
-  assert.match(page, /Live totaal excl\. btw/);
+  assert.match(page, /const \[quantity, setQuantity\] = useState\(0\)/);
+  assert.match(page, /Indicatieve prijs · excl\. btw/);
+  assert.match(page, /type="range" min="0"/);
   assert.match(page, /Telefoonnummer<input type="tel"/);
   assert.match(page, /telefoonnummer: phone/);
   assert.match(page, /firecom-logo-secondary\.png/);
@@ -112,6 +114,8 @@ test("keeps the alarm configurator pricing and routes explicit", async () => {
   assert.match(alarm, /image="\.\/twig-embody\.jpg"/);
   assert.match(alarm, /image="\.\/swissphone-c35\.png"/);
   assert.match(alarm, /receiver-icon-device/);
+  assert.match(alarm, /const \[appUsers, setAppUsers\] = useState\(0\)/);
+  assert.match(alarm, /Indicatieve prijs · excl\. btw/);
   assert.match(alarm, /syncAutomaticIndependence\(current, value >= 3 \|\| espa\)/);
   assert.match(alarm, /syncAutomaticIndependence\(current, reliability >= 3 \|\| nextEspa\)/);
   assert.match(alarm, /current === "off" \? "manual" : "off"/);
