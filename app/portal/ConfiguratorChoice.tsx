@@ -8,43 +8,43 @@ export default function ConfiguratorChoice() {
           <img className={styles.brandLogo} src="./firecom-logo-secondary.png" alt="" aria-hidden="true" />
           <span className={styles.brandTitle}>Firecom <b>online configurator</b></span>
         </a>
-        <span className={styles.help}>Professionele keuzehulp</span>
+        <span className={styles.help}>Samenstellen en prijsindicatie</span>
       </header>
 
       <section className={styles.intro} aria-labelledby="choice-title">
-        <span className={styles.eyebrow}><i /> Firecom keuzehulp</span>
-        <h1 id="choice-title">Wat wilt u<br /><em>configureren?</em></h1>
-        <p>Kies de oplossing die bij uw organisatie past. Iedere configurator heeft zijn eigen producten, prijzen en onderhoudsopties.</p>
+        <span className={styles.eyebrow}><i /> Firecom configuratoren</span>
+        <h1 id="choice-title">Kies uw<br /><em>toepassing</em></h1>
+        <p>Stel uw communicatie- of alarmeringsoplossing samen. U ziet welke onderdelen zijn gekozen en welke kosten daarbij horen.</p>
       </section>
 
       <section className={styles.choices} aria-label="Kies een configurator">
         <a className={styles.choice} href="./communicatie/">
           <span className={styles.number}>01</span>
-          <span className={styles.icon} aria-hidden="true">🔊</span>
+          <span className={`${styles.icon} ${styles.speakerIcon}`} aria-hidden="true"><i /><b /></span>
           <span className={styles.content}>
-            <small>Direct beschikbaar</small>
+            <small>Configurator</small>
             <h2>Communicatie</h2>
-            <p>Stel een complete portofoonoplossing samen met toestellen, bereik, ESPA, vergunning en onderhoud.</p>
+            <p>Portofoons, bereik, ESPA, vergunning en onderhoud.</p>
             <strong>Open communicatie <i>→</i></strong>
           </span>
         </a>
 
         <a className={`${styles.choice} ${styles.alarming}`} href="./alarmering/">
           <span className={styles.number}>02</span>
-          <span className={styles.icon} aria-hidden="true">🚨</span>
+          <span className={`${styles.icon} ${styles.sirenIcon}`} aria-hidden="true"><i /><b /></span>
           <span className={styles.content}>
-            <small>Direct beschikbaar</small>
+            <small>Configurator</small>
             <h2>Alarmering</h2>
-            <p>De nieuwe configurator voor alarmeringsoplossingen, inclusief passende onderhoudsmogelijkheden.</p>
+            <p>Apps, alarmontvangers, RF-infrastructuur, koppelingen en onderhoud.</p>
             <strong>Open alarmering <i>→</i></strong>
           </span>
         </a>
       </section>
 
       <footer className={styles.footer}>
-        <span>Advies van Firecom</span>
-        <span>Indicatieve prijzen</span>
-        <span>Offerte op maat</span>
+        <div><b>Firecom B.V.</b><span>Randweg 10–12 · 2941 CG Lekkerkerk</span></div>
+        <div><a href="tel:+31854011980">085 401 19 80</a><a href="mailto:info@firecom.nl">info@firecom.nl</a></div>
+        <p>Na verzending controleert een Firecom-specialist uw configuratie en ontvangt u een concrete offerte.</p>
       </footer>
     </main>
   );

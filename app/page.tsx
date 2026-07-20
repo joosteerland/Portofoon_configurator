@@ -103,6 +103,20 @@ export default function Home() {
   const systemTotal = recommendation.subtotal + programmingTotal + repeaterTotal + espaTotal;
   const annualRdi = repeater ? RDI_ANNUAL_REPEATER : RDI_ANNUAL_RADIOS;
   const plan = maintenancePlans[maintenance];
+  const recommendationReasons = useMemo(() => {
+    const reasons: string[] = [];
+    if (quantity === 0) reasons.push("Kies het aantal portofoons om de investering te berekenen.");
+    if (atex === "yes") reasons.push("ATEX is gekozen; daarom adviseren we de explosieveilige Motorola R7Ex.");
+    else if (atex === "unknown") reasons.push("ATEX is nog niet vastgesteld; Firecom controleert dit vóór de offerte.");
+    if (environment === "heavy") reasons.push("De zware werkomgeving vraagt om maximale bescherming.");
+    else if (environment === "wet") reasons.push("Stof, regen en intensief gebruik vragen om een robuuster toestel.");
+    if (noise === "extreme") reasons.push("Het zeer hoge geluidsniveau vraagt om de krachtigste audio in de selectie.");
+    else if (noise === "loud") reasons.push("De lawaaiige omgeving vraagt om extra luide en heldere audio.");
+    if (display !== "none") reasons.push(display === "full" ? "Een volledig display is gekozen voor menu’s en berichten." : "Een compact display is gekozen voor statusinformatie.");
+    if (safety !== "none") reasons.push(safety === "advanced" ? "Geavanceerde veiligheidsfuncties vragen om een uitgebreidere toestelserie." : "De gekozen basisveiligheid vraagt om een toestel met noodfuncties.");
+    if (repeater) reasons.push("De SLR5500 is toegevoegd voor aanvullende dekking.");
+    return reasons.slice(0, 4);
+  }, [quantity, atex, environment, noise, display, safety, repeater]);
 
   const applyPreset = (preset: "simple" | "logistics" | "industrial" | "atex") => {
     if (preset === "simple") { setAtex("no"); setDisplay("none"); setEnvironment("normal"); setNoise("normal"); setSafety("none"); setChannels("1-3"); setRepeater(false); setEspa("none"); }
@@ -146,21 +160,21 @@ export default function Home() {
       </header>
 
       <section className="hero" aria-labelledby="page-title">
-        <div className="eyebrow"><span /> Firecom keuzehulp</div>
+        <div className="eyebrow"><span /> Firecom communicatie</div>
         <h1 id="page-title">Communicatie<br /><em>configurator</em></h1>
-        <p>Stel stap voor stap een professionele portofoonoplossing samen. Je ziet direct een indicatieve prijs en ontvangt daarna een passende offerte van Firecom.</p>
-        <div className="trust-row"><span>Alle prijzen excl. btw</span><span>Programmering inbegrepen</span><span>Direct een helder advies</span></div>
+        <p>Kies de portofoons, dekking en service die uw organisatie nodig heeft. De prijs verandert direct mee; een Firecom-specialist controleert het voorstel.</p>
+        <div className="trust-row"><span>Prijzen excl. btw</span><span>Programmering meegerekend</span><span>Controle door een specialist</span></div>
       </section>
 
       <nav className="step-nav" aria-label="Stappen"><a href="#start">1. Start</a><a href="#vragen">2. Toestellen</a><a href="#bereik">3. Bereik</a><a href="#onderhoud">4. Onderhoud</a><a href="#offerte">5. Offerte</a></nav>
 
       <section className="quick-start" id="start" aria-labelledby="quick-title">
-        <div className="section-intro"><span className="step-kicker">Snel beginnen</span><h2 id="quick-title">Welke situatie past het beste?</h2><p>Kies een uitgangspunt of stel alles zelf samen. Je kunt iedere keuze daarna aanpassen.</p></div>
+        <div className="section-intro"><span className="step-kicker">Voorinstellingen</span><h2 id="quick-title">Kies een uitgangspunt</h2><p>Een voorinstelling vult de belangrijkste keuzes in. Daarna kunt u alles aanpassen.</p></div>
         <div className="preset-grid">
-          <Preset icon="↔" title="Eenvoudige communicatie" text="Vaste groepen, rustige omgeving" action={() => applyPreset("simple")} />
-          <Preset icon="▦" title="Magazijn & logistiek" text="Lawaai, water en statusweergave" action={() => applyPreset("logistics")} />
-          <Preset icon="⚙" title="Industrie" text="Zware omstandigheden en veiligheid" action={() => applyPreset("industrial")} />
-          <Preset icon="ATEX" title="Explosiegevaar" text="Eén R7Ex-productfamilie" action={() => applyPreset("atex")} featured />
+          <Preset number="01" title="Eenvoudige communicatie" text="Vaste groepen, rustige omgeving" action={() => applyPreset("simple")} />
+          <Preset number="02" title="Magazijn & logistiek" text="Lawaai, water en statusweergave" action={() => applyPreset("logistics")} />
+          <Preset number="03" title="Industrie" text="Zware omstandigheden en veiligheid" action={() => applyPreset("industrial")} />
+          <Preset number="04" title="Explosiegevaar" text="Motorola R7Ex voor ATEX-omgevingen" action={() => applyPreset("atex")} featured />
         </div>
       </section>
 
@@ -220,11 +234,12 @@ export default function Home() {
         </div>
 
         <aside className="result-panel" aria-live="polite">
-          <div className="result-topline"><span className="live-dot" /> Uw live configuratie</div>
+          <div className="result-topline"><span className="live-dot" /> Voorlopige configuratie</div>
           <div className="product-photo"><img src={recommendation.product.image} alt={recommendation.product.name} /></div>
           <span className="model-pill">{recommendation.product.label}</span><h2>{recommendation.product.name}</h2><p className="variant-copy">{recommendation.product.variant} · {band}</p><code className="sku">SKU {recommendation.product.sku}</code><p className="model-copy">{recommendation.product.why}</p>
           <div className="spec-grid"><div><small>Bescherming</small><b>{recommendation.product.protection}</b></div><div><small>Audio</small><b>{recommendation.product.audio}</b></div><div><small>Accuduur</small><b>{recommendation.product.battery}</b></div><div><small>Groepen</small><b>{channels}</b></div></div>
-          <div className="price-block"><span>Indicatieve investering</span><strong>{euro.format(systemTotal)}</strong><small>exclusief btw</small></div>
+          <div className="recommendation-reasons"><b>Waarom dit voorstel</b><ul>{recommendationReasons.map((reason) => <li key={reason}>{reason}</li>)}</ul></div>
+          <div className="price-block"><span>Indicatieve investering</span><strong>{euro.format(systemTotal)}</strong><small>exclusief btw · definitieve prijs volgt na controle</small></div>
           <div className="summary-lines"><span><b>{quantity} × {recommendation.product.name}</b><strong>{euro.format(recommendation.subtotal)}</strong></span><span><b>Programmering</b><strong>{euro.format(programmingTotal)}</strong></span>{repeater && <><span><b>SLR5500-pakket</b><strong>{euro.format(SLR5500_PACKAGE_PRICE)}</strong></span><span><b>Plaatsing repeater</b><strong>{euro.format(REPEATER_INSTALLATION_PRICE)}</strong></span></>}{espa !== "none" && <span><b>{espaName}</b><strong>{euro.format(espaTotal)}</strong></span>}<span className="total"><b>Totaal excl. btw</b><strong>{euro.format(systemTotal)}</strong></span></div>
           {permit !== "existing" && <div className="aside-notice"><b>RDI rechtstreeks te betalen</b><span>{euro.format(RDI_ONE_TIME)} eenmalig + {euro.format(annualRdi)} per jaar (tarief 2022)</span></div>}
           <div className="aside-notice maintenance"><b>Onderhoud: {plan.name}</b><span>{plan.price ? `${euro.format(plan.price)} per jaar` : "Geen jaarlijkse kosten"} · {plan.response}</span></div>
@@ -236,16 +251,17 @@ export default function Home() {
       <div className="floating-price"><div><small>Indicatieve prijs · excl. btw</small><b>{euro.format(systemTotal)}</b></div><span>{quantity} × {recommendation.product.name}{repeater ? " + SLR5500" : ""}{espa !== "none" ? " + ESPA 4.4.4" : ""}</span></div>
 
       <section className="quote-request" id="offerte" aria-labelledby="quote-title">
-        <div className="quote-intro"><span className="step-kicker">Laatste stap</span><h2 id="quote-title">Ontvang een echte offerte van Firecom.</h2><p>Laat uw gegevens achter. Firecom controleert de configuratie, vergunning, bereik en pakketinhoud en neemt contact met u op.</p><div className="quote-summary"><span><small>Geselecteerd</small><b>{quantity} × {recommendation.product.name}</b></span><span><small>Investering</small><b>{euro.format(systemTotal)} excl. btw</b></span><span><small>Onderhoud</small><b>{plan.name}{plan.price ? ` · ${euro.format(plan.price)}/jaar` : ""}</b></span></div></div>
+        <div className="quote-intro"><span className="step-kicker">Controle door Firecom</span><h2 id="quote-title">Laat uw configuratie controleren.</h2><p>Een specialist controleert toestelkeuze, bereik, vergunning en pakketinhoud. Daarna ontvangt u een concrete offerte.</p><div className="quote-summary"><span><small>Geselecteerd</small><b>{quantity} × {recommendation.product.name}</b></span><span><small>Indicatieve investering</small><b>{euro.format(systemTotal)} excl. btw</b></span><span><small>Onderhoud</small><b>{plan.name}{plan.price ? ` · ${euro.format(plan.price)}/jaar` : ""}</b></span></div></div>
         <form className="quote-form" onSubmit={requestQuote}><label>Bedrijfsnaam<input value={companyName} onChange={(e) => setCompanyName(e.target.value)} autoComplete="organization" required /></label><label>Naam<input value={contactName} onChange={(e) => setContactName(e.target.value)} autoComplete="name" required /></label><label>E-mailadres<input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required /></label><label>Telefoonnummer<input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} autoComplete="tel" /></label><label className="website-field" aria-hidden="true">Website<input value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} /></label><button type="submit" disabled={quoteState === "sending" || quoteState === "sent"}>{quoteState === "sending" ? "Verzenden…" : quoteState === "sent" ? "Aanvraag verzonden" : "Vraag mijn offerte aan"}</button><p className="privacy-note">Door te verzenden geeft u Firecom toestemming om contact op te nemen over deze configuratie.</p>{quoteState !== "idle" && quoteState !== "sending" && <div className={`form-status ${quoteState}`}>{quoteMessage}</div>}</form>
       </section>
 
-      <section className="comparison" aria-labelledby="compare-title"><div className="section-intro"><span className="step-kicker">Alle artikelen behouden</span><h2 id="compare-title">De complete Motorola-selectie</h2></div><div className="comparison-grid">{Object.entries(products).map(([key, product]) => <article key={key}><img src={product.image} alt="" /><span>{product.name}</span><b>{product.variant}</b><small>SKU {product.sku}</small><strong>{euro.format(product.price)}</strong><p>{product.protection} · {product.audio} · VHF/UHF</p></article>)}</div></section>
-      <footer><span>COMMUNICATIE <em>CONFIGURATOR</em></span><p>Een indicatieve keuzehulp van Firecom · alle prijzen exclusief btw.</p></footer>
+      <section className="comparison" aria-labelledby="compare-title"><div className="section-intro"><span className="step-kicker">Motorola portofoons</span><h2 id="compare-title">Modellen en prijzen</h2><p>De getoonde modellen blijven beschikbaar, ook als de configurator een ander toestel adviseert.</p></div><div className="comparison-grid">{Object.entries(products).map(([key, product]) => <article key={key}><img src={product.image} alt="" /><span>{product.name}</span><b>{product.variant}</b><small>SKU {product.sku}</small><strong>{euro.format(product.price)}</strong><p>{product.protection} · {product.audio} · VHF/UHF</p></article>)}</div></section>
+      <FirecomFooter />
     </main>
   );
 }
 
 function Question({ number, title, subtitle, children }: { number: string; title: string; subtitle: string; children: React.ReactNode }) { return <fieldset className="question-group"><legend><span>{number}</span><div><b>{title}</b><small>{subtitle}</small></div></legend>{children}</fieldset>; }
 function Choice({ active, title, subtitle, onClick, disabled = false }: { active: boolean; title: string; subtitle: string; onClick: () => void; disabled?: boolean }) { return <button type="button" className={`choice-card ${active ? "active" : ""}`} onClick={onClick} aria-pressed={active} disabled={disabled}><span className="radio-dot" /><b>{title}</b><small>{subtitle}</small>{disabled && <em>Niet beschikbaar</em>}</button>; }
-function Preset({ icon, title, text, action, featured = false }: { icon: string; title: string; text: string; action: () => void; featured?: boolean }) { return <button type="button" className={`preset-card ${featured ? "featured" : ""}`} onClick={action}><span>{icon}</span><b>{title}</b><small>{text}</small><em>Start hiermee →</em></button>; }
+function Preset({ number, title, text, action, featured = false }: { number: string; title: string; text: string; action: () => void; featured?: boolean }) { return <button type="button" className={`preset-card ${featured ? "featured" : ""}`} onClick={action}><span>{number}</span><b>{title}</b><small>{text}</small><em>Gebruik deze voorinstelling →</em></button>; }
+function FirecomFooter() { return <footer className="company-footer"><div><b>Firecom B.V.</b><span>Randweg 10–12 · 2941 CG Lekkerkerk</span></div><div className="footer-contact"><a href="tel:+31854011980">085 401 19 80</a><a href="mailto:info@firecom.nl">info@firecom.nl</a></div><p>Een Firecom-specialist controleert iedere aanvraag voordat u een offerte ontvangt.</p></footer>; }
